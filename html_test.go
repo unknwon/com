@@ -12,31 +12,24 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package com_test
+package com
 
 import (
-	"fmt"
-
-	"github.com/Unknwon/com"
+	"testing"
 )
 
-func ExampleColorLogS() {
-	coloredLog := com.ColorLogS(fmt.Sprintf(
-		"[WARN] This is a tesing log that should be colored, path( %s ),"+
-			" highlight # %s #, error [ %s ].",
-		"path to somewhere", "highlighted content", "tesing error"))
-	fmt.Println(coloredLog)
-}
-
-func ExampleColorLog() {
-	com.ColorLog(fmt.Sprintf(
-		"[WARN] This is a tesing log that should be colored, path( %s ),"+
-			" highlight # %s #, error [ %s ].",
-		"path to somewhere", "highlighted content", "tesing error"))
-}
-
-func ExampleHtml2JS() {
+func TestHtml2JS(t *testing.T) {
 	htm := "<div id=\"button\" class=\"btn\">Click me</div>\n\r"
-	js := string(com.Html2JS([]byte(htm)))
-	fmt.Println(js)
+	js := string(Html2JS([]byte(htm)))
+	jsR := `<div id=\"button\" class=\"btn\">Click me</div>\n`
+	if js != jsR {
+		t.Errorf("Html2JS:\n Expect => %s\n Got => %s\n", jsR, js)
+	}
+}
+
+func BenchmarkHtml2JS(b *testing.B) {
+	htm := "<div id=\"button\" class=\"btn\">Click me</div>\n\r"
+	for i := 0; i < b.N; i++ {
+		Html2JS([]byte(htm))
+	}
 }
