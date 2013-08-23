@@ -1,10 +1,10 @@
 package com
 
 import (
-	"path"
-	"os"
 	"io"
 	"io/ioutil"
+	"os"
+	"path"
 )
 
 // get filepath base name
@@ -127,5 +127,11 @@ func FileGetContent(file string) (string, error) {
 	if e != nil {
 		return "", e
 	}
-	return string(b),nil
+	return string(b), nil
+}
+
+// IsExist returns whether a file or directory exists.
+func IsExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
 }

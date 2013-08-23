@@ -20,6 +20,10 @@ import (
 	"github.com/Unknwon/com"
 )
 
+// ------------------------------
+// cmd.go
+// ------------------------------
+
 func ExampleColorLogS() {
 	coloredLog := com.ColorLogS(fmt.Sprintf(
 		"[WARN] This is a tesing log that should be colored, path( %s ),"+
@@ -35,8 +39,50 @@ func ExampleColorLog() {
 		"path to somewhere", "highlighted content", "tesing error"))
 }
 
+// ------------- END ------------
+
+// ------------------------------
+// html.go
+// ------------------------------
+
 func ExampleHtml2JS() {
 	htm := "<div id=\"button\" class=\"btn\">Click me</div>\n\r"
 	js := string(com.Html2JS([]byte(htm)))
 	fmt.Println(js)
 }
+
+// ------------- END ------------
+
+// ------------------------------
+// path.go
+// ------------------------------
+
+func ExampleGetGOPATHs() {
+	gps := com.GetGOPATHs()
+	fmt.Println(gps)
+}
+
+func ExampleGetSrcPath() {
+	srcPath, err := com.GetSrcPath("github.com/Unknwon/com")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(srcPath)
+}
+
+// ------------- END ------------
+
+// ------------------------------
+// file.go
+// ------------------------------
+
+func ExampleIsExist() {
+	if com.IsExist("file.go") {
+		fmt.Println("file.go exists")
+		return
+	}
+	fmt.Println("file.go does not exists")
+}
+
+// ------------- END ------------

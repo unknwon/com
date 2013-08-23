@@ -20,10 +20,6 @@ import (
 	"testing"
 )
 
-// ------------------------------
-// Color log output.
-// ------------------------------
-
 func TestColorLogS(t *testing.T) {
 	if runtime.GOOS != "windows" {
 		// Trace + path.
@@ -124,5 +120,3 @@ func BenchmarkColorLogS(b *testing.B) {
 		ColorLogS(log)
 	}
 }
-
-// ------------- END ------------
