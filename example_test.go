@@ -49,8 +49,7 @@ func ExampleHtml2JS() {
 	htm := "<div id=\"button\" class=\"btn\">Click me</div>\n\r"
 	js := string(com.Html2JS([]byte(htm)))
 	fmt.Println(js)
-	// Output:
-	// <div id=\"button\" class=\"btn\">Click me</div>\n
+	// Output: <div id=\"button\" class=\"btn\">Click me</div>\n
 }
 
 // ------------- END ------------
