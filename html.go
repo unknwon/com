@@ -1,5 +1,5 @@
 
-package common
+package com
 
 import (
 	"html"
