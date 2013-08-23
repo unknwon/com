@@ -43,13 +43,18 @@ func ColorLog(format string, a ...interface{}) {
 }
 
 // ColorLogS colors log and return colored content.
+//
 // Log format: <level> <content [highlight][path]> [ error ].
+//
 // Level: TRAC -> blue; ERRO -> red; WARN -> Magenta; SUCC -> green; others -> default.
+//
 // Content: default; path: yellow; error -> red.
+//
 // Level has to be surrounded by "[" and "]".
 // Highlights have to be surrounded by "# " and " #"(space), "#" will be deleted.
 // Paths have to be surrounded by "( " and " )"(sapce).
 // Errors have to be surrounded by "[ " and " ]"(space).
+//
 // Note: it hasn't support windows yet, contribute is welcome.
 func ColorLogS(format string, a ...interface{}) string {
 	log := fmt.Sprintf(format, a...)
