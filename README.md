@@ -21,7 +21,7 @@ See results on [drone.io](https://drone.io/github.com/Unknwon/com/latest) by `go
 
 ## API documentation
 
-[Go Walker](http://gowalker.org/Unknwon/com)
+[Go Walker](http://gowalker.org/github.com/Unknwon/com)
 
 ## License
 
