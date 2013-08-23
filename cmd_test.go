@@ -29,7 +29,7 @@ func TestColorLogS(t *testing.T) {
 		// Trace + path.
 		cls := ColorLogS("[TRAC] Trace level test with path( %s )", "/path/to/somethere")
 		clsR := fmt.Sprintf(
-			"[\033[%dmTRAC%s] Trace level test with path([\033[%dm%s%s)",
+			"[\033[%dmTRAC%s] Trace level test with path(\033[%dm%s%s)",
 			Blue, EndColor, Yellow, "/path/to/somethere", EndColor)
 		if cls != clsR {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
@@ -38,8 +38,8 @@ func TestColorLogS(t *testing.T) {
 		// Error + error.
 		cls = ColorLogS("[ERRO] Error level test with error[ %s ]", "test error")
 		clsR = fmt.Sprintf(
-			"[\033[%dmERRO%s] Trace level test with error([\033[%dm%s%s)",
-			Blue, EndColor, Red, "test error", EndColor)
+			"[\033[%dmERRO%s] Trace level test with error(\033[%dm%s%s)",
+			Red, EndColor, Red, "test error", EndColor)
 		if cls != clsR {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
 		}
@@ -47,8 +47,8 @@ func TestColorLogS(t *testing.T) {
 		// Warnning + highlight.
 		cls = ColorLogS("[WARN] Warnning level test with highlight # %s #", "special offer!")
 		clsR = fmt.Sprintf(
-			"[\033[%dmWARN%s] Warnning level test with highlight [\033[%dm%s%s",
-			Blue, EndColor, Gray, "special offer!", EndColor)
+			"[\033[%dmWARN%s] Warnning level test with highlight \033[%dm%s%s",
+			Magenta, EndColor, Gray, "special offer!", EndColor)
 		if cls != clsR {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
 		}
@@ -57,7 +57,7 @@ func TestColorLogS(t *testing.T) {
 		cls = ColorLogS("[SUCC] Success level test")
 		clsR = fmt.Sprintf(
 			"[\033[%dmSUCC%s] Success level",
-			Blue, EndColor, Green)
+			Green, EndColor)
 		if cls != clsR {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
 		}
