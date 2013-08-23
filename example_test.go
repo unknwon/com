@@ -71,8 +71,6 @@ func ExampleGetSrcPath() {
 		return
 	}
 	fmt.Println(srcPath)
-	// Output:
-	// /Users/Joe/Appliations/Go/src/github.com/Unknwon/com
 }
 
 // ------------- END ------------
