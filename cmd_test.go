@@ -38,7 +38,7 @@ func TestColorLogS(t *testing.T) {
 		// Error + error.
 		cls = ColorLogS("[ERRO] Error level test with error[ %s ]", "test error")
 		clsR = fmt.Sprintf(
-			"[\033[%dmERRO%s] Trace level test with error(\033[%dm%s%s)",
+			"[\033[%dmERRO%s] Trace level test with error[\033[%dm%s%s]",
 			Red, EndColor, Red, "test error", EndColor)
 		if cls != clsR {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
@@ -56,7 +56,7 @@ func TestColorLogS(t *testing.T) {
 		// Success.
 		cls = ColorLogS("[SUCC] Success level test")
 		clsR = fmt.Sprintf(
-			"[\033[%dmSUCC%s] Success level",
+			"[\033[%dmSUCC%s] Success level test",
 			Green, EndColor)
 		if cls != clsR {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
