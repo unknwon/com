@@ -15,15 +15,25 @@
 package com
 
 import (
-	"os"
+	"testing"
 )
 
-// IsDir checks whether the path is a directory,
-// it returns false when it's a file or does not exist.
-func IsDir(dir string) bool {
-	f, e := os.Stat(dir)
-	if e != nil {
-		return false
+func TestIsDir(t *testing.T) {
+	if IsDir("file.go") {
+		t.Errorf("IsExist:\n Expect => %v\n Got => %v\n", false, true)
 	}
-	return f.IsDir()
+
+	if !IsDir("testdata") {
+		t.Errorf("IsExist:\n Expect => %v\n Got => %v\n", true, false)
+	}
+
+	if IsDir("foo") {
+		t.Errorf("IsExist:\n Expect => %v\n Got => %v\n", false, true)
+	}
+}
+
+func BenchmarkIsDir(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		IsDir("file.go")
+	}
 }

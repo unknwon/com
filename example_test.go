@@ -83,7 +83,21 @@ func ExampleIsExist() {
 		fmt.Println("file.go exists")
 		return
 	}
-	fmt.Println("file.go does not exists")
+	fmt.Println("file.go does not exist")
+}
+
+// ------------- END ------------
+
+// ------------------------------
+// dir.go
+// ------------------------------
+
+func ExampleIsDir() {
+	if com.IsDir("files") {
+		fmt.Println("directory 'files' exists")
+		return
+	}
+	fmt.Println("'files' is not a directory or does not exist")
 }
 
 // ------------- END ------------
