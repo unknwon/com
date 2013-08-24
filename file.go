@@ -46,7 +46,11 @@ func FileSize(file string) (int64, error) {
 
 // check is file
 func IsFile(file string) bool {
-	if _, e := os.Stat(file); e != nil {
+	f, e := os.Stat(file)
+	if e != nil {
+		return false
+	}
+	if f.IsDir() {
 		return false
 	}
 	return true
@@ -127,5 +131,5 @@ func FileGetContent(file string) (string, error) {
 	if e != nil {
 		return "", e
 	}
-	return string(b),nil
+	return string(b), nil
 }
