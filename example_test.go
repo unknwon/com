@@ -83,7 +83,7 @@ func ExampleIsExist() {
 		fmt.Println("file.go exists")
 		return
 	}
-	fmt.Println("file.go does not exist")
+	fmt.Println("file.go is not a file or does not exist")
 }
 
 // ------------- END ------------
