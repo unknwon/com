@@ -129,3 +129,9 @@ func FileGetContent(file string) (string, error) {
 	}
 	return string(b),nil
 }
+
+// IsExist returns whether a file or directory exists.
+func IsExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
+}
