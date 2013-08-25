@@ -101,3 +101,31 @@ func ExampleIsDir() {
 }
 
 // ------------- END ------------
+
+// ------------------------------
+// string.go
+// ------------------------------
+
+func ExampleIsLetter() {
+	fmt.Println(com.IsLetter('1'))
+	fmt.Println(com.IsLetter('['))
+	fmt.Println(com.IsLetter('a'))
+	fmt.Println(com.IsLetter('Z'))
+	// Output:
+	// false
+	// false
+	// true
+	// true
+}
+
+func ExampleExpand() {
+	match := map[string]string{
+		"domain":    "gowalker.org",
+		"subdomain": "github.com",
+	}
+	s := "http://{domain}/{subdomain}/{0}/{1}"
+	fmt.Println(com.Expand(s, match, "Unknwon", "gowalker"))
+	// Output: http://gowalker.org/github.com/Unknwon/gowalker
+}
+
+// ------------- END ------------

@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -112,4 +113,28 @@ func IsLetter(l uint8) bool {
 		return true
 	}
 	return false
+}
+
+// Expand replaces {k} in template with match[k] or subs[atoi(k)] if k is not in match.
+func Expand(template string, match map[string]string, subs ...string) string {
+	var p []byte
+	var i int
+	for {
+		i = strings.Index(template, "{")
+		if i < 0 {
+			break
+		}
+		p = append(p, template[:i]...)
+		template = template[i+1:]
+		i = strings.Index(template, "}")
+		if s, ok := match[template[:i]]; ok {
+			p = append(p, s...)
+		} else {
+			j, _ := strconv.Atoi(template[:i])
+			p = append(p, subs[j]...)
+		}
+		template = template[i+1:]
+	}
+	p = append(p, template...)
+	return string(p)
 }

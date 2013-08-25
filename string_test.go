@@ -36,8 +36,31 @@ func TestIsLetter(t *testing.T) {
 	}
 }
 
+func TestExpand(t *testing.T) {
+	match := map[string]string{
+		"domain":    "gowalker.org",
+		"subdomain": "github.com",
+	}
+	s := "http://{domain}/{subdomain}/{0}/{1}"
+	sR := "http://gowalker.org/github.com/Unknwon/gowalker"
+	if Expand(s, match, "Unknwon", "gowalker") != sR {
+		t.Errorf("Expand:\n Expect => %s\n Got => %s\n", sR, s)
+	}
+}
+
 func BenchmarkIsLetter(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsLetter('a')
+	}
+}
+
+func BenchmarkExpand(b *testing.B) {
+	match := map[string]string{
+		"domain":    "gowalker.org",
+		"subdomain": "github.com",
+	}
+	s := "http://{domain}/{subdomain}/{0}/{1}"
+	for i := 0; i < b.N; i++ {
+		Expand(s, match, "Unknwon", "gowalker")
 	}
 }
