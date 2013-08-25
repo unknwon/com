@@ -1,11 +1,11 @@
 package com
 
 import (
-	"strings"
 	"crypto/md5"
 	"crypto/sha1"
-	"io"
 	"fmt"
+	"io"
+	"strings"
 	"unicode"
 )
 
@@ -103,4 +103,13 @@ func StrToLower(str string) string {
 // convert first letter to upper
 func UcFirst(str string) string {
 	return strings.Title(str)
+}
+
+// IsLetter returns true if the 'l' is an English letter.
+func IsLetter(l uint8) bool {
+	n := (l | 0x20) - 'a'
+	if n >= 0 && n < 26 {
+		return true
+	}
+	return false
 }
