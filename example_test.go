@@ -16,6 +16,8 @@ package com_test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/Unknwon/com"
 )
@@ -126,6 +128,22 @@ func ExampleExpand() {
 	s := "http://{domain}/{subdomain}/{0}/{1}"
 	fmt.Println(com.Expand(s, match, "Unknwon", "gowalker"))
 	// Output: http://gowalker.org/github.com/Unknwon/gowalker
+}
+
+// ------------- END ------------
+
+// ------------------------------
+// http.go
+// ------------------------------
+
+func ExampleHttpGet() ([]byte, error) {
+	rc, err := com.HttpGet(&http.Client{}, "http://gowalker.org", nil)
+	if err != nil {
+		return nil, err
+	}
+	p, err := ioutil.ReadAll(rc)
+	rc.Close()
+	return p, err
 }
 
 // ------------- END ------------
