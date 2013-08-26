@@ -114,16 +114,6 @@ func Rename(file string, to string) error {
 	return os.Rename(file, to)
 }
 
-// put string to file
-func FilePutContent(file string, content string) (int, error) {
-	fs, e := os.Create(file)
-	if e != nil {
-		return 0, e
-	}
-	defer fs.Close()
-	return fs.WriteString(content)
-}
-
 // get string from text file
 func FileGetContent(file string) (string, error) {
 	if !IsFile(file) {
@@ -138,8 +128,8 @@ func FileGetContent(file string) (string, error) {
 
 // IsFile checks whether the path is a file,
 // it returns false when it's a directory or does not exist.
-func IsFile(file string) bool {
-	f, e := os.Stat(file)
+func IsFile(filePath string) bool {
+	f, e := os.Stat(filePath)
 	if e != nil {
 		return false
 	}
@@ -150,4 +140,22 @@ func IsFile(file string) bool {
 func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil || os.IsExist(err)
+}
+
+// SaveFile saves content type '[]byte' to file with given path.
+// It returns error when fail to finish operation.
+func SaveFile(filePath string, b []byte) (int, error) {
+	os.MkdirAll(path.Dir(filePath), os.ModePerm)
+	fw, err := os.Create(filePath)
+	if err != nil {
+		return 0, err
+	}
+	defer fw.Close()
+	return fw.Write(b)
+}
+
+// SaveFileS saves content type 'string' to file with given path.
+// It returns error when fail to finish operation.
+func SaveFileS(filePath string, s string) (int, error) {
+	return SaveFile(filePath, []byte(s))
 }

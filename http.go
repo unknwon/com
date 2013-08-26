@@ -32,11 +32,11 @@ func (e NotFoundError) Error() string {
 
 type RemoteError struct {
 	Host string
-	err  error
+	Err  error
 }
 
 func (e *RemoteError) Error() string {
-	return e.err.Error()
+	return e.Err.Error()
 }
 
 var UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1541.0 Safari/537.36"

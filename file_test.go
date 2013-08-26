@@ -42,6 +42,26 @@ func TestIsExist(t *testing.T) {
 	}
 }
 
+func TestSaveFile(t *testing.T) {
+	s := "TestSaveFile"
+	n, err := SaveFile("testdata/SaveFile.txt", []byte(s))
+	if err != nil {
+		t.Errorf("SaveFile:\n Expect => %v\n Got => %v\n", nil, err)
+	} else if n == 0 {
+		t.Errorf("SaveFile:\n Expect => %d\n Got => %d\n", len(s), n)
+	}
+}
+
+func TestSaveFileS(t *testing.T) {
+	s := "TestSaveFileS"
+	n, err := SaveFileS("testdata/SaveFileS.txt", s)
+	if err != nil {
+		t.Errorf("SaveFileS:\n Expect => %v\n Got => %v\n", nil, err)
+	} else if n == 0 {
+		t.Errorf("SaveFileS:\n Expect => %d\n Got => %d\n", len(s), n)
+	}
+}
+
 func BenchmarkIsFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsFile("file.go")
@@ -51,5 +71,17 @@ func BenchmarkIsFile(b *testing.B) {
 func BenchmarkIsExist(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsExist("file.go")
+	}
+}
+
+func BenchmarkSaveFile(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		SaveFile("testdata/SaveFile.txt", []byte("TestSaveFile"))
+	}
+}
+
+func BenchmarkSaveFileS(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		SaveFileS("testdata/SaveFileS.txt", "TestSaveFileS")
 	}
 }

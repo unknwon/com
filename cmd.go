@@ -125,3 +125,8 @@ func getColorLevel(level string) string {
 }
 
 // ------------- END ------------
+
+// ExecCmd executes system command and returns results and error.
+func ExecCmd(cmdName string, args ...string) (string, error) {
+
+}
