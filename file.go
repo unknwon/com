@@ -15,6 +15,7 @@
 package com
 
 import (
+	"archive/zip"
 	"io"
 	"io/ioutil"
 	"os"
@@ -163,4 +164,38 @@ func ReadFile(filePath string) ([]byte, error) {
 func ReadFileS(filePath string) (string, error) {
 	b, err := ReadFile(filePath)
 	return string(b), err
+}
+
+// Unzip unzips .zip file to 'destPath'.
+// It returns error when fail to finish operation.
+func Unzip(srcPath, destPath string) ([]string, error) {
+	// Open a zip archive for reading
+	r, err := zip.OpenReader(srcPath)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+
+	dirs := make([]stirng, 0, 5)
+	// Iterate through the files in the archive
+	for _, f := range r.File {
+		// Get files from archive
+		rc, err := f.Open()
+		if err != nil {
+			return nil, err
+		}
+		// Create diretory before create file
+		os.MkdirAll(destPath+"/"+path.Dir(f.FileInfo().Name()), os.ModePerm)
+		// Write data to file
+		fw, _ := os.Create(destPath + "/" + f.FileInfo().Name())
+		if err != nil {
+			return nil, err
+		}
+		_, err = io.Copy(fw, rc)
+		fw.Close()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return dirs, nil
 }

@@ -123,6 +123,11 @@ func ExampleReadFileS() {
 	fmt.Println(s, err)
 }
 
+func ExampleUnzip() {
+	dirs, err := com.Unzip("src/file/path", "dest/file/path")
+	fmt.Println(dirs, err)
+}
+
 // ------------- END ------------
 
 // ------------------------------

@@ -80,6 +80,10 @@ func TestReadFileS(t *testing.T) {
 	}
 }
 
+func TestUnzip(t *testing.T) {
+
+}
+
 func BenchmarkIsFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsFile("file.go")
@@ -102,4 +106,8 @@ func BenchmarkSaveFileS(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		SaveFileS("testdata/SaveFileS.txt", "TestSaveFileS")
 	}
+}
+
+func BenchmarkUnzip(b *testing.B) {
+
 }
