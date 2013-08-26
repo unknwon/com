@@ -191,6 +191,50 @@ func ExampleHttpGetJSON() interface{} {
 	return j
 }
 
+type rawFile struct {
+	rawURL string
+	data   []byte
+}
+
+func (rf *rawFile) RawURL() string {
+	return rf.rawURL
+}
+
+func (rf *rawFile) Data() []byte {
+	return rf.data
+}
+
+func (rf *rawFile) SetData(p []byte) {
+	rf.data = p
+}
+
+func ExampleFetchFiles() {
+	// Code that should be outside of your function body.
+	// type rawFile struct {
+	// 	rawURL string
+	// 	data   []byte
+	// }
+
+	// func (rf *rawFile) RawURL() string {
+	// 	return rf.rawURL
+	// }
+
+	// func (rf *rawFile) Data() []byte {
+	// 	return rf.data
+	// }
+
+	// func (rf *rawFile) SetData(p []byte) {
+	// 	rf.data = p
+	// }
+
+	files := []com.RawFile{
+		&rawFile{rawURL: "http://example.com"},
+		&rawFile{rawURL: "http://example.com/foo"},
+	}
+	err := com.FetchFiles(&http.Client{}, files, nil)
+	fmt.Println(err, len(files[0].Data()), len(files[1].Data()))
+}
+
 // ------------- END ------------
 
 // ------------------------------

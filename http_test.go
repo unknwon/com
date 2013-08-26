@@ -43,7 +43,7 @@ func TestHttpGet(t *testing.T) {
 	}
 
 	// 404.
-	rc, err = HttpGet(&http.Client{}, "https://github.com/foooooooooo", nil)
+	rc, err = HttpGet(&http.Client{}, "http://example.com/foo", nil)
 	if err == nil {
 		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", NotFoundError{}, nil)
 	} else if _, ok := err.(NotFoundError); !ok {
@@ -66,6 +66,38 @@ func TestHttpGetJSON(t *testing.T) {
 
 }
 
+type rawFile struct {
+	rawURL string
+	data   []byte
+}
+
+func (rf *rawFile) RawURL() string {
+	return rf.rawURL
+}
+
+func (rf *rawFile) Data() []byte {
+	return rf.data
+}
+
+func (rf *rawFile) SetData(p []byte) {
+	rf.data = p
+}
+
+func TestFetchFiles(t *testing.T) {
+	files := []RawFile{
+		&rawFile{rawURL: "http://example.com"},
+		&rawFile{rawURL: "http://example.com"},
+	}
+	err := FetchFiles(&http.Client{}, files, nil)
+	if err != nil {
+		t.Errorf("FetchFiles:\n Expect => %s\n Got => %s\n", nil, err)
+	} else if len(files[0].Data()) != 1270 {
+		t.Errorf("FetchFiles:\n Expect => %d\n Got => %d\n", 1270, len(files[0].Data()))
+	} else if len(files[1].Data()) != 1270 {
+		t.Errorf("FetchFiles:\n Expect => %d\n Got => %d\n", 1270, len(files[1].Data()))
+	}
+}
+
 func BenchmarkHttpGet(b *testing.B) {
 	client := &http.Client{}
 	for i := 0; i < b.N; i++ {
@@ -84,5 +116,16 @@ func BenchmarkHttpGetJSON(b *testing.B) {
 	client := &http.Client{}
 	for i := 0; i < b.N; i++ {
 		HttpGetJSON(client, "http://example.com", nil)
+	}
+
+}
+
+func BenchmarkFetchFiles(b *testing.B) {
+	files := []RawFile{
+		&rawFile{rawURL: "http://example.com"},
+		&rawFile{rawURL: "http://www.baidu.com"},
+	}
+	for i := 0; i < b.N; i++ {
+		FetchFiles(&http.Client{}, files, nil)
 	}
 }
