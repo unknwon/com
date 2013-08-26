@@ -146,4 +146,14 @@ func ExampleHttpGet() ([]byte, error) {
 	return p, err
 }
 
+func ExampleHttpGetBytes() ([]byte, error) {
+	p, err := com.HttpGetBytes(&http.Client{}, "http://gowalker.org", nil)
+	return p, err
+}
+
+func ExampleHttpGetJSON() interface{} {
+	j := com.HttpGetJSON(&http.Client{}, "http://gowalker.org", nil)
+	return j
+}
+
 // ------------- END ------------

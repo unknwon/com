@@ -15,8 +15,10 @@
 package com
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -64,4 +66,31 @@ func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser
 		err = &RemoteError{req.URL.Host, fmt.Errorf("get %s -> %d", url, resp.StatusCode)}
 	}
 	return nil, err
+}
+
+// HttpGetBytes gets the specified resource. ErrNotFound is returned if the server
+// responds with status 404.
+func HttpGetBytes(client *http.Client, url string, header http.Header) ([]byte, error) {
+	rc, err := HttpGet(client, url, header)
+	if err != nil {
+		return nil, err
+	}
+	p, err := ioutil.ReadAll(rc)
+	rc.Close()
+	return p, err
+}
+
+// HttpGetJSON gets the specified resource and mapping to struct.
+// ErrNotFound is returned if the server responds with status 404.
+func HttpGetJSON(client *http.Client, url string, v interface{}) error {
+	rc, err := HttpGet(client, url, nil)
+	if err != nil {
+		return err
+	}
+	defer rc.Close()
+	err = json.NewDecoder(rc).Decode(v)
+	if _, ok := err.(*json.SyntaxError); ok {
+		err = NotFoundError{"JSON syntax error at " + url}
+	}
+	return err
 }
