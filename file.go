@@ -114,18 +114,6 @@ func Rename(file string, to string) error {
 	return os.Rename(file, to)
 }
 
-// get string from text file
-func FileGetContent(file string) (string, error) {
-	if !IsFile(file) {
-		return "", os.ErrNotExist
-	}
-	b, e := ioutil.ReadFile(file)
-	if e != nil {
-		return "", e
-	}
-	return string(b), nil
-}
-
 // IsFile checks whether the path is a file,
 // it returns false when it's a directory or does not exist.
 func IsFile(filePath string) bool {
@@ -142,7 +130,7 @@ func IsExist(path string) bool {
 	return err == nil || os.IsExist(err)
 }
 
-// SaveFile saves content type '[]byte' to file with given path.
+// SaveFile saves content type '[]byte' to file by given path.
 // It returns error when fail to finish operation.
 func SaveFile(filePath string, b []byte) (int, error) {
 	os.MkdirAll(path.Dir(filePath), os.ModePerm)
@@ -154,8 +142,25 @@ func SaveFile(filePath string, b []byte) (int, error) {
 	return fw.Write(b)
 }
 
-// SaveFileS saves content type 'string' to file with given path.
+// SaveFileS saves content type 'string' to file by given path.
 // It returns error when fail to finish operation.
 func SaveFileS(filePath string, s string) (int, error) {
 	return SaveFile(filePath, []byte(s))
+}
+
+// ReadFile reads data type '[]byte' from file by given path.
+// It returns error when fail to finish operation.
+func ReadFile(filePath string) ([]byte, error) {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return []byte(""), err
+	}
+	return b, nil
+}
+
+// ReadFileS reads data type 'string' from file by given path.
+// It returns error when fail to finish operation.
+func ReadFileS(filePath string) (string, error) {
+	b, err := ReadFile(filePath)
+	return string(b), err
 }

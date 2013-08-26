@@ -113,6 +113,16 @@ func ExampleSaveFileS() {
 	fmt.Println(n, err)
 }
 
+func ExampleReadFile() {
+	b, err := com.ReadFile("SaveFile.txt")
+	fmt.Println(string(b), err)
+}
+
+func ExampleReadFileS() {
+	s, err := com.ReadFileS("SaveFileS.txt")
+	fmt.Println(s, err)
+}
+
 // ------------- END ------------
 
 // ------------------------------

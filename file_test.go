@@ -62,6 +62,24 @@ func TestSaveFileS(t *testing.T) {
 	}
 }
 
+func TestReadFile(t *testing.T) {
+	b, err := ReadFile("testdata/SaveFile.txt")
+	if err != nil {
+		t.Errorf("ReadFile:\n Expect => %v\n Got => %v\n", nil, err)
+	} else if string(b) != "TestSaveFile" {
+		t.Errorf("ReadFile:\n Expect => %s\n Got => %s\n", "TestSaveFile", string(b))
+	}
+}
+
+func TestReadFileS(t *testing.T) {
+	s, err := ReadFileS("testdata/SaveFileS.txt")
+	if err != nil {
+		t.Errorf("ReadFileS:\n Expect => %v\n Got => %v\n", nil, err)
+	} else if s != "TestSaveFileS" {
+		t.Errorf("ReadFileS:\n Expect => %s\n Got => %s\n", "TestSaveFileS", s)
+	}
+}
+
 func BenchmarkIsFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsFile("file.go")
