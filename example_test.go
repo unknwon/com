@@ -80,12 +80,32 @@ func ExampleGetSrcPath() {
 // file.go
 // ------------------------------
 
+func ExampleIsFile() {
+	if com.IsFile("file.go") {
+		fmt.Println("file.go exists")
+		return
+	}
+	fmt.Println("file.go is not a file or does not exist")
+}
+
 func ExampleIsExist() {
 	if com.IsExist("file.go") {
 		fmt.Println("file.go exists")
 		return
 	}
-	fmt.Println("file.go is not a file or does not exist")
+	fmt.Println("file.go does not exist")
+}
+
+func ExampleSaveFile() {
+	s := "ExampleSaveFile"
+	n, err := com.SaveFile("SaveFile.txt", []byte(s))
+	fmt.Println(n, err)
+}
+
+func ExampleSaveFileS() {
+	s := "ExampleSaveFileS"
+	n, err := com.SaveFileS("SaveFileS.txt", s)
+	fmt.Println(n, err)
 }
 
 // ------------- END ------------
