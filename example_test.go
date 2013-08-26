@@ -28,17 +28,22 @@ import (
 
 func ExampleColorLogS() {
 	coloredLog := com.ColorLogS(fmt.Sprintf(
-			"[WARN] This is a tesing log that should be colored, path( %s )," +
-					" highlight # %s #, error [ %s ].",
+		"[WARN] This is a tesing log that should be colored, path( %s ),"+
+			" highlight # %s #, error [ %s ].",
 		"path to somewhere", "highlighted content", "tesing error"))
 	fmt.Println(coloredLog)
 }
 
 func ExampleColorLog() {
 	com.ColorLog(fmt.Sprintf(
-			"[WARN] This is a tesing log that should be colored, path( %s )," +
-					" highlight # %s #, error [ %s ].",
+		"[WARN] This is a tesing log that should be colored, path( %s ),"+
+			" highlight # %s #, error [ %s ].",
 		"path to somewhere", "highlighted content", "tesing error"))
+}
+
+func ExampleExecCmd() {
+	stdout, stderr, err := com.ExecCmd("go", "help", "get")
+	fmt.Println(stdout, stderr, err)
 }
 
 // ------------- END ------------
