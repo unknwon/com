@@ -16,7 +16,10 @@
 package com
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"os/exec"
 	"runtime"
 	"strings"
 )
@@ -126,7 +129,31 @@ func getColorLevel(level string) string {
 
 // ------------- END ------------
 
-// ExecCmd executes system command and returns results and error.
-func ExecCmd(cmdName string, args ...string) (string, error) {
-	return "", nil
+// ExecCmd executes system command and returns output, stderr(both string type) and error.
+func ExecCmd(cmdName string, args ...string) (string, string, error) {
+	bufOut := new(bytes.Buffer)
+	bufErr := new(bytes.Buffer)
+
+	cmd := exec.Command(cmdName, args...)
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return "", "", err
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return "", "", err
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return "", "", err
+	}
+
+	go io.Copy(bufOut, stdout)
+	go io.Copy(bufErr, stderr)
+
+	cmd.Wait()
+
+	return bufOut.String(), bufErr.String(), nil
 }
