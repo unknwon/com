@@ -32,24 +32,9 @@ func TestGetGOPATHs(t *testing.T) {
 	}
 
 	gps := GetGOPATHs()
-	if !compareSliceStr(gps, gpsR) {
+	if !CompareSliceStr(gps, gpsR) {
 		t.Errorf("GetGOPATHs:\n Expect => %s\n Got => %s\n", gpsR, gps)
 	}
-}
-
-func compareSliceStr(s1, s2 []string) bool {
-	// Length.
-	if len(s1) != len(s2) {
-		return false
-	}
-
-	for i := range s1 {
-		if s1[i] != s2[i] {
-			return false
-		}
-	}
-
-	return true
 }
 
 func TestGetSrcPath(t *testing.T) {

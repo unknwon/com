@@ -31,7 +31,7 @@ func TestHttpGet(t *testing.T) {
 	// 200.
 	rc, err := HttpGet(&http.Client{}, "http://example.com", nil)
 	if err != nil {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", nil, err)
+		t.Errorf("HttpGet:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 	p, err := ioutil.ReadAll(rc)
 	if err != nil {
@@ -54,7 +54,7 @@ func TestHttpGet(t *testing.T) {
 func TestHttpGetBytes(t *testing.T) {
 	p, err := HttpGetBytes(&http.Client{}, "http://example.com", nil)
 	if err != nil {
-		t.Errorf("HttpGetBytes:\n Expect => %s\n Got => %s\n", nil, err)
+		t.Errorf("HttpGetBytes:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 	s := string(p)
 	if !strings.HasPrefix(s, examplePrefix) {
@@ -90,7 +90,7 @@ func TestFetchFiles(t *testing.T) {
 	}
 	err := FetchFiles(&http.Client{}, files, nil)
 	if err != nil {
-		t.Errorf("FetchFiles:\n Expect => %s\n Got => %s\n", nil, err)
+		t.Errorf("FetchFiles:\n Expect => %v\n Got => %s\n", nil, err)
 	} else if len(files[0].Data()) != 1270 {
 		t.Errorf("FetchFiles:\n Expect => %d\n Got => %d\n", 1270, len(files[0].Data()))
 	} else if len(files[1].Data()) != 1270 {

@@ -263,3 +263,17 @@ func ExampleIsUrl() {
 }
 
 // ------------- END ------------
+
+// ------------------------------
+// slice.go
+// ------------------------------
+
+func ExampleAppendStr() {
+	s := []string{"a"}
+	s = com.AppendStr(s, "a")
+	s = com.AppendStr(s, "b")
+	fmt.Println(s)
+	// Output: [a b]
+}
+
+// ------------- END ------------

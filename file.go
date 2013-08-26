@@ -166,7 +166,7 @@ func ReadFileS(filePath string) (string, error) {
 	return string(b), err
 }
 
-// Unzip unzips .zip file to 'destPath'.
+// Unzip unzips .zip file to 'destPath' and returns sub-directories.
 // It returns error when fail to finish operation.
 func Unzip(srcPath, destPath string) ([]string, error) {
 	// Open a zip archive for reading
@@ -176,7 +176,7 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 	}
 	defer r.Close()
 
-	dirs := make([]stirng, 0, 5)
+	dirs := make([]string, 0, 5)
 	// Iterate through the files in the archive
 	for _, f := range r.File {
 		// Get files from archive
@@ -184,8 +184,12 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		dir := path.Dir(f.FileInfo().Name())
 		// Create diretory before create file
-		os.MkdirAll(destPath+"/"+path.Dir(f.FileInfo().Name()), os.ModePerm)
+		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
+		dirs = AppendStr(dirs, dir)
+
 		// Write data to file
 		fw, _ := os.Create(destPath + "/" + f.FileInfo().Name())
 		if err != nil {
