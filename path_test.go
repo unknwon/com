@@ -41,6 +41,13 @@ func TestGetSrcPath(t *testing.T) {
 
 }
 
+func TestHomeDir(t *testing.T) {
+	_, err := HomeDir()
+	if err != nil {
+		t.Errorf("HomeDir:\n Expect => %s\n Got => %s\n", nil, err)
+	}
+}
+
 func BenchmarkGetGOPATHs(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		GetGOPATHs()
@@ -50,5 +57,11 @@ func BenchmarkGetGOPATHs(b *testing.B) {
 func BenchmarkGetSrcPath(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		GetSrcPath("github.com/Unknwon/com")
+	}
+}
+
+func BenchmarkHomeDir(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		HomeDir()
 	}
 }

@@ -67,3 +67,14 @@ func GetSrcPath(importPath string) (string, error) {
 
 	return appPath, nil
 }
+
+// HomeDir returns path of '~'(in Linux),
+// it returns error when the variable does not exist.
+func HomeDir() (string, error) {
+	dir := os.Getenv("userprofile")
+	if dir == "" {
+		return "", errors.New("Environment variable 'userprofile' does not exist")
+	}
+
+	return dir, nil
+}

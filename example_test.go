@@ -79,6 +79,11 @@ func ExampleGetSrcPath() {
 	fmt.Println(srcPath)
 }
 
+func ExampleHomeDir() {
+	hd, err := com.HomeDir()
+	fmt.Println(hd, err)
+}
+
 // ------------- END ------------
 
 // ------------------------------
