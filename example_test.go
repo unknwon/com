@@ -128,6 +128,11 @@ func ExampleUnzip() {
 	fmt.Println(dirs, err)
 }
 
+func ExampleUnTarGz() {
+	dirs, err := com.UnTarGz("src/file/path", "dest/file/path")
+	fmt.Println(dirs, err)
+}
+
 // ------------- END ------------
 
 // ------------------------------

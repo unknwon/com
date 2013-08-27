@@ -84,6 +84,10 @@ func TestUnzip(t *testing.T) {
 
 }
 
+func TestUnTarGz(t *testing.T) {
+
+}
+
 func BenchmarkIsFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsFile("file.go")
@@ -109,5 +113,9 @@ func BenchmarkSaveFileS(b *testing.B) {
 }
 
 func BenchmarkUnzip(b *testing.B) {
+
+}
+
+func BenchmarkUnTarGz(b *testing.B) {
 
 }
