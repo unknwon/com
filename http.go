@@ -97,6 +97,7 @@ func HttpGetJSON(client *http.Client, url string, v interface{}) error {
 
 // A RawFile describles a file that can be downloaded.
 type RawFile interface {
+	Name() string
 	RawURL() string
 	Data() []byte
 	SetData([]byte)

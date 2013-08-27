@@ -15,7 +15,9 @@
 package com
 
 import (
+	"archive/tar"
 	"archive/zip"
+	"compress/gzip"
 	"io"
 	"io/ioutil"
 	"os"
@@ -199,6 +201,58 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 		fw.Close()
 		if err != nil {
 			return nil, err
+		}
+	}
+	return dirs, nil
+}
+
+// UnTarGz ungzips and untars .tar.gz file to 'destPath' and returns sub-directories.
+// It returns error when fail to finish operation.
+func UnTarGz(srcFilePath string, destDirPath string) ([]string, error) {
+	// Create destination directory
+	os.Mkdir(destDirPath, os.ModePerm)
+
+	fr, err := os.Open(srcFilePath)
+	if err != nil {
+		return nil, err
+	}
+	defer fr.Close()
+
+	// Gzip reader
+	gr, err := gzip.NewReader(fr)
+	if err != nil {
+		return nil, err
+	}
+	defer gr.Close()
+
+	// Tar reader
+	tr := tar.NewReader(gr)
+
+	dirs := make([]string, 0, 5)
+	for {
+		hdr, err := tr.Next()
+		if err == io.EOF {
+			// End of tar archive
+			break
+		}
+
+		// Check if it is diretory or file
+		if hdr.Typeflag != tar.TypeDir {
+			// Get files from archive
+			// Create diretory before create file
+			dir := path.Dir(hdr.Name)
+			os.MkdirAll(destDirPath+"/"+dir, os.ModePerm)
+			dirs = AppendStr(dirs, dir)
+
+			// Write data to file
+			fw, _ := os.Create(destDirPath + "/" + hdr.Name)
+			if err != nil {
+				return nil, err
+			}
+			_, err = io.Copy(fw, tr)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	return dirs, nil

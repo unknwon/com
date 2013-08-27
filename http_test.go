@@ -67,8 +67,13 @@ func TestHttpGetJSON(t *testing.T) {
 }
 
 type rawFile struct {
+	name   string
 	rawURL string
 	data   []byte
+}
+
+func (rf *rawFile) Name() string {
+	return rf.name
 }
 
 func (rf *rawFile) RawURL() string {

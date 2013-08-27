@@ -197,8 +197,13 @@ func ExampleHttpGetJSON() interface{} {
 }
 
 type rawFile struct {
+	name   string
 	rawURL string
 	data   []byte
+}
+
+func (rf *rawFile) Name() string {
+	return rf.name
 }
 
 func (rf *rawFile) RawURL() string {
@@ -216,8 +221,13 @@ func (rf *rawFile) SetData(p []byte) {
 func ExampleFetchFiles() {
 	// Code that should be outside of your function body.
 	// type rawFile struct {
+	// name   string
 	// 	rawURL string
 	// 	data   []byte
+	// }
+
+	// func (rf *rawFile) Name() string {
+	// 	return rf.name
 	// }
 
 	// func (rf *rawFile) RawURL() string {
