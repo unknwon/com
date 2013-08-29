@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 )
 
 // get filepath base name
@@ -187,7 +188,8 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 			return nil, err
 		}
 
-		dir := path.Dir(f.FileInfo().Name())
+		dir := path.Dir(strings.TrimSuffix(
+			f.FileInfo().Name(), "/"))
 		// Create diretory before create file
 		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
 		dirs = AppendStr(dirs, dir)
