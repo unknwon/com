@@ -22,7 +22,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"strings"
 )
 
 // get filepath base name
@@ -188,14 +187,17 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 			return nil, err
 		}
 
-		fn := strings.TrimSuffix(f.FileInfo().Name(), "/")
-		dir := path.Dir(fn)
+		dir := path.Dir(f.FileInfo().Name())
 		// Create diretory before create file
 		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
 		dirs = AppendStr(dirs, dir)
 
+		if f.FileInfo().IsDir() {
+			continue
+		}
+
 		// Write data to file
-		fw, _ := os.Create(destPath + "/" + fn)
+		fw, _ := os.Create(destPath + "/" + f.FileInfo().Name())
 		if err != nil {
 			return nil, err
 		}
