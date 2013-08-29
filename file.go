@@ -188,14 +188,14 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 			return nil, err
 		}
 
-		dir := path.Dir(strings.TrimSuffix(
-			f.FileInfo().Name(), "/"))
+		fn := strings.TrimSuffix(f.FileInfo().Name(), "/")
+		dir := path.Dir(fn)
 		// Create diretory before create file
 		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
 		dirs = AppendStr(dirs, dir)
 
 		// Write data to file
-		fw, _ := os.Create(destPath + "/" + f.FileInfo().Name())
+		fw, _ := os.Create(destPath + "/" + fn)
 		if err != nil {
 			return nil, err
 		}
