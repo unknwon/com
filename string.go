@@ -131,7 +131,11 @@ func Expand(template string, match map[string]string, subs ...string) string {
 			p = append(p, s...)
 		} else {
 			j, _ := strconv.Atoi(template[:i])
-			p = append(p, subs[j]...)
+			if j >= len(subs) {
+				p = append(p, []byte("Missing")...)
+			} else {
+				p = append(p, subs[j]...)
+			}
 		}
 		template = template[i+1:]
 	}

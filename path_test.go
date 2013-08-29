@@ -44,7 +44,7 @@ func TestGetSrcPath(t *testing.T) {
 func TestHomeDir(t *testing.T) {
 	_, err := HomeDir()
 	if err != nil {
-		t.Errorf("HomeDir:\n Expect => %s\n Got => %s\n", nil, err)
+		t.Errorf("HomeDir:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 }
 

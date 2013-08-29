@@ -18,6 +18,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"os/user"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -68,13 +69,20 @@ func GetSrcPath(importPath string) (string, error) {
 	return appPath, nil
 }
 
-// HomeDir returns path of '~'(in Linux),
+// HomeDir returns path of '~'(in Linux) on Windows,
 // it returns error when the variable does not exist.
 func HomeDir() (string, error) {
-	dir := os.Getenv("userprofile")
-	if dir == "" {
-		return "", errors.New("Environment variable 'userprofile' does not exist")
+	if runtime.GOOS != "windows" {
+		curUser, err := user.Current()
+		if err != nil {
+			return "", err
+		}
+		return curUser.HomeDir, nil
+	} else {
+		dir := os.Getenv("userprofile")
+		if dir == "" {
+			return "", errors.New("Environment variable 'userprofile' does not exist")
+		}
+		return dir, nil
 	}
-
-	return dir, nil
 }
