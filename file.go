@@ -202,7 +202,10 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 			return nil, err
 		}
 		_, err = io.Copy(fw, rc)
-		fw.Close()
+
+		if fw != nil {
+			fw.Close()
+		}
 		if err != nil {
 			return nil, err
 		}
