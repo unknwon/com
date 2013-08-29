@@ -125,3 +125,27 @@ func FetchFiles(client *http.Client, files []RawFile, header http.Header) error 
 	}
 	return nil
 }
+
+// FetchFiles uses command `curl` to fetche files specified by the rawURL field in parallel.
+func FetchFilesCurl(files []RawFile, curlOptions ...string) error {
+	ch := make(chan error, len(files))
+	for i := range files {
+		go func(i int) {
+			var err error
+			stdout, _, err := ExecCmd("curl", append(curlOptions, files[i].RawURL())...)
+			if err != nil {
+				ch <- err
+				return
+			}
+
+			files[i].SetData([]byte(stdout))
+			ch <- nil
+		}(i)
+	}
+	for _ = range files {
+		if err := <-ch; err != nil {
+			return err
+		}
+	}
+	return nil
+}

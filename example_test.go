@@ -260,6 +260,38 @@ func ExampleFetchFiles() {
 	fmt.Println(err, len(files[0].Data()), len(files[1].Data()))
 }
 
+func ExampleFetchFilesCurl() {
+	// Code that should be outside of your function body.
+	// type rawFile struct {
+	// name   string
+	// 	rawURL string
+	// 	data   []byte
+	// }
+
+	// func (rf *rawFile) Name() string {
+	// 	return rf.name
+	// }
+
+	// func (rf *rawFile) RawURL() string {
+	// 	return rf.rawURL
+	// }
+
+	// func (rf *rawFile) Data() []byte {
+	// 	return rf.data
+	// }
+
+	// func (rf *rawFile) SetData(p []byte) {
+	// 	rf.data = p
+	// }
+
+	files := []com.RawFile{
+		&rawFile{rawURL: "http://example.com"},
+		&rawFile{rawURL: "http://example.com/foo"},
+	}
+	err := com.FetchFilesCurl(files)
+	fmt.Println(err, len(files[0].Data()), len(files[1].Data()))
+}
+
 // ------------- END ------------
 
 // ------------------------------

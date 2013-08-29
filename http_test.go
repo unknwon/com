@@ -103,6 +103,21 @@ func TestFetchFiles(t *testing.T) {
 	}
 }
 
+func TestFetchFilesCurl(t *testing.T) {
+	files := []RawFile{
+		&rawFile{rawURL: "http://example.com"},
+		&rawFile{rawURL: "http://example.com"},
+	}
+	err := FetchFilesCurl(files)
+	if err != nil {
+		t.Errorf("FetchFilesCurl:\n Expect => %v\n Got => %s\n", nil, err)
+	} else if len(files[0].Data()) != 1270 {
+		t.Errorf("FetchFilesCurl:\n Expect => %d\n Got => %d\n", 1270, len(files[0].Data()))
+	} else if len(files[1].Data()) != 1270 {
+		t.Errorf("FetchFilesCurl:\n Expect => %d\n Got => %d\n", 1270, len(files[1].Data()))
+	}
+}
+
 func BenchmarkHttpGet(b *testing.B) {
 	client := &http.Client{}
 	for i := 0; i < b.N; i++ {
@@ -132,5 +147,15 @@ func BenchmarkFetchFiles(b *testing.B) {
 	}
 	for i := 0; i < b.N; i++ {
 		FetchFiles(&http.Client{}, files, nil)
+	}
+}
+
+func BenchmarkFetchFilesCurl(b *testing.B) {
+	files := []RawFile{
+		&rawFile{rawURL: "http://example.com"},
+		&rawFile{rawURL: "http://www.baidu.com"},
+	}
+	for i := 0; i < b.N; i++ {
+		FetchFilesCurl(files)
 	}
 }
