@@ -71,7 +71,7 @@ func Rtrim(str string) string {
 	return strings.TrimRightFunc(str, unicode.IsSpace)
 }
 
-// trim space in all string lenth
+// trim space in all string length
 func Trim(str string) string {
 	return strings.TrimSpace(str)
 }

@@ -34,7 +34,7 @@ func Dirname(file string) string {
 	return path.Dir(file)
 }
 
-// get absolute filepath, based on built excutable file
+// get absolute filepath, based on built executable file
 func RealPath(file string) (string, error) {
 	if path.IsAbs(file) {
 		return file, nil
@@ -188,7 +188,7 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 		}
 
 		dir := path.Dir(f.FileInfo().Name())
-		// Create diretory before create file
+		// Create directory before create file
 		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
 		dirs = AppendStr(dirs, dir)
 
@@ -243,10 +243,10 @@ func UnTarGz(srcFilePath string, destDirPath string) ([]string, error) {
 			break
 		}
 
-		// Check if it is diretory or file
+		// Check if it is directory or file
 		if hdr.Typeflag != tar.TypeDir {
 			// Get files from archive
-			// Create diretory before create file
+			// Create directory before create file
 			dir := path.Dir(hdr.Name)
 			os.MkdirAll(destDirPath+"/"+dir, os.ModePerm)
 			dirs = AppendStr(dirs, dir)

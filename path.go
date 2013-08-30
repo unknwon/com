@@ -85,4 +85,5 @@ func HomeDir() (string, error) {
 		}
 		return dir, nil
 	}
+	return "", nil
 }

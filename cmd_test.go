@@ -41,7 +41,7 @@ func TestColorLogS(t *testing.T) {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
 		}
 
-		// Warnning + highlight.
+		// Warning + highlight.
 		cls = ColorLogS("[WARN] Warnning level test with highlight # %s #", "special offer!")
 		clsR = fmt.Sprintf(
 			"[\033[%dmWARN%s] Warnning level test with highlight \033[%dm%s%s",
@@ -85,7 +85,7 @@ func TestColorLogS(t *testing.T) {
 			t.Errorf("ColorLogS:\n Expect => %s\n Got => %s\n", clsR, cls)
 		}
 
-		// Warnning + highlight.
+		// Warning + highlight.
 		cls = ColorLogS("[WARN] Warnning level test with highlight # %s #", "special offer!")
 		clsR = fmt.Sprintf(
 			"[WARN] Warnning level test with highlight %s",

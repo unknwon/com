@@ -51,7 +51,7 @@ func ColorLog(format string, a ...interface{}) {
 // Content: default; path: yellow; error -> red.
 // Level has to be surrounded by "[" and "]".
 // Highlights have to be surrounded by "# " and " #"(space), "#" will be deleted.
-// Paths have to be surrounded by "( " and " )"(sapce).
+// Paths have to be surrounded by "( " and " )"(space).
 // Errors have to be surrounded by "[ " and " ]"(space).
 // Note: it hasn't support windows yet, contribute is welcome.
 func ColorLogS(format string, a ...interface{}) string {
@@ -125,6 +125,7 @@ func getColorLevel(level string) string {
 	default:
 		return level
 	}
+	return level
 }
 
 // ------------- END ------------

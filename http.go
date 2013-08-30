@@ -95,7 +95,7 @@ func HttpGetJSON(client *http.Client, url string, v interface{}) error {
 	return err
 }
 
-// A RawFile describles a file that can be downloaded.
+// A RawFile describes a file that can be downloaded.
 type RawFile interface {
 	Name() string
 	RawURL() string
@@ -108,7 +108,6 @@ func FetchFiles(client *http.Client, files []RawFile, header http.Header) error 
 	ch := make(chan error, len(files))
 	for i := range files {
 		go func(i int) {
-			var err error
 			p, err := HttpGetBytes(client, files[i].RawURL(), nil)
 			if err != nil {
 				ch <- err
@@ -126,12 +125,11 @@ func FetchFiles(client *http.Client, files []RawFile, header http.Header) error 
 	return nil
 }
 
-// FetchFiles uses command `curl` to fetche files specified by the rawURL field in parallel.
+// FetchFiles uses command `curl` to fetch files specified by the rawURL field in parallel.
 func FetchFilesCurl(files []RawFile, curlOptions ...string) error {
 	ch := make(chan error, len(files))
 	for i := range files {
 		go func(i int) {
-			var err error
 			stdout, _, err := ExecCmd("curl", append(curlOptions, files[i].RawURL())...)
 			if err != nil {
 				ch <- err
