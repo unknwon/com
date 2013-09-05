@@ -1,4 +1,3 @@
-
 package com
 
 import (
@@ -11,17 +10,17 @@ import (
 // format unix time int to string
 func Date(ti int64, format string) string {
 	t := time.Unix(int64(ti), 0)
-	return DateTime(t, format)
+	return DateT(t, format)
 }
 
 // format unix time string to string
-func DateUnixStr(ts string, format string) string {
+func DateS(ts string, format string) string {
 	i, _ := strconv.ParseInt(ts, 10, 64)
-	return Date(i, format)
+	return DateT(i, format)
 }
 
 // format time.Time to string
-func DateTime(t time.Time, format string) string {
+func DateT(t time.Time, format string) string {
 	res := strings.Replace(format, "MM", t.Format("01"), -1)
 	res = strings.Replace(res, "M", t.Format("1"), -1)
 	res = strings.Replace(res, "DD", t.Format("02"), -1)
