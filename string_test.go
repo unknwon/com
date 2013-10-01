@@ -48,6 +48,15 @@ func TestExpand(t *testing.T) {
 	}
 }
 
+func TestReverse(t *testing.T) {
+	if Reverse("abcdefg") != "gfedcba" {
+		t.Errorf("Reverse:\n Except => %s\n Got =>%s\n", "gfedcba", Reverse("abcdefg"))
+	}
+	if Reverse("上善若水厚德载物") != "物载德厚水若善上" {
+		t.Errorf("Reverse:\n Except => %s\n Got =>%s\n", "物载德厚水若善上", Reverse("上善若水厚德载物"))
+	}
+}
+
 func BenchmarkIsLetter(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsLetter('a')
@@ -62,5 +71,12 @@ func BenchmarkExpand(b *testing.B) {
 	s := "http://{domain}/{subdomain}/{0}/{1}"
 	for i := 0; i < b.N; i++ {
 		Expand(s, match, "Unknwon", "gowalker")
+	}
+}
+
+func BenchmarkReverse(b *testing.B) {
+	s := "abscef中文"
+	for i := 0; i < b.N; i++ {
+		Reverse(s)
 	}
 }
