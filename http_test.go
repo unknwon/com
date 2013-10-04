@@ -76,7 +76,7 @@ func (rf *rawFile) Name() string {
 	return rf.name
 }
 
-func (rf *rawFile) RawURL() string {
+func (rf *rawFile) RawUrl() string {
 	return rf.rawURL
 }
 
