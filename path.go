@@ -17,9 +17,7 @@ package com
 import (
 	"errors"
 	"os"
-	"os/exec"
 	"os/user"
-	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -41,13 +39,7 @@ func GetGOPATHs() []string {
 // GetSrcPath returns app. source code path.
 // It only works when you have src. folder in GOPATH,
 // it returns error not able to locate source folder path.
-func GetSrcPath(importPath string) (string, error) {
-	// Look up executable in PATH variable.
-	appPath, err := exec.LookPath(path.Base(os.Args[0]))
-	if err != nil {
-		return "", err
-	}
-
+func GetSrcPath(importPath string) (appPath string, err error) {
 	paths := GetGOPATHs()
 	for _, p := range paths {
 		if IsExist(p + "/src/" + importPath + "/") {
