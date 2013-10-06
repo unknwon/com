@@ -187,7 +187,7 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 			return nil, err
 		}
 
-		dir := path.Dir(f.FileInfo().Name())
+		dir := path.Dir(f.Name)
 		// Create directory before create file
 		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
 		dirs = AppendStr(dirs, dir)
@@ -197,7 +197,7 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 		}
 
 		// Write data to file
-		fw, _ := os.Create(destPath + "/" + f.FileInfo().Name())
+		fw, _ := os.Create(path.Join(destPath,f.Name))
 		if err != nil {
 			return nil, err
 		}
