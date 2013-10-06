@@ -1,7 +1,7 @@
 Common functions
 ===
 
-[![Build Status](https://drone.io/github.com/Unknwon/com/status.png)](https://drone.io/github.com/Unknwon/com/latest)
+[![Build Status](https://drone.io/github.com/Unknwon/com/status.png)](https://drone.io/github.com/Unknwon/com/latest) [![Go Walker](http://gowalker.org/api/v1/badge)](http://gowalker.org/github.com/Unknwon/com)
 
 This is an open source project for commonly used functions for the Go programming language.
 
@@ -18,10 +18,6 @@ Your contribute is welcome, but you have to check following steps after you adde
 ## Performance
 
 See results on [drone.io](https://drone.io/github.com/Unknwon/com/latest) by `go test -bench="."`.
-
-## API documentation
-
-[Go Walker](http://gowalker.org/github.com/Unknwon/com)
 
 ## License
 
