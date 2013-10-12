@@ -216,7 +216,7 @@ func (rf *rawFile) Name() string {
 	return rf.name
 }
 
-func (rf *rawFile) RawURL() string {
+func (rf *rawFile) RawUrl() string {
 	return rf.rawURL
 }
 
@@ -240,7 +240,7 @@ func ExampleFetchFiles() {
 	// 	return rf.name
 	// }
 
-	// func (rf *rawFile) RawURL() string {
+	// func (rf *rawFile) RawUrl() string {
 	// 	return rf.rawURL
 	// }
 
@@ -272,7 +272,7 @@ func ExampleFetchFilesCurl() {
 	// 	return rf.name
 	// }
 
-	// func (rf *rawFile) RawURL() string {
+	// func (rf *rawFile) RawUrl() string {
 	// 	return rf.rawURL
 	// }
 

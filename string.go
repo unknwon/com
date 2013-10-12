@@ -152,3 +152,14 @@ func Expand(template string, match map[string]string, subs ...string) string {
 	p = append(p, template...)
 	return string(p)
 }
+
+// Reverse s string, support unicode
+func Reverse(s string) string {
+	n := len(s)
+	runes := make([]rune, n)
+	for _, rune := range s {
+		n--
+		runes[n] = rune
+	}
+	return string(runes[n:])
+}
