@@ -20,7 +20,3 @@ Your contribute is welcome, but you have to check following steps after you adde
 ## Performance
 
 See results on [drone.io](https://drone.io/github.com/Unknwon/com/latest) by `go test -bench="."`.
-
-## License
-
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
