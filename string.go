@@ -3,7 +3,9 @@ package com
 import (
 	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
 	"fmt"
+	"hash"
 	"io"
 	"strconv"
 	"strings"
@@ -54,11 +56,19 @@ func Md5(str string) string {
 	return fmt.Sprintf("%x", m.Sum(nil))
 }
 
-// sha1 hash string
-func Sha1(str string) string {
-	m := sha1.New()
+func sha(m hash.Hash, str string) string {
 	io.WriteString(m, str)
 	return fmt.Sprintf("%x", m.Sum(nil))
+}
+
+// sha1 hash string
+func Sha1(str string) string {
+	return sha(sha1.New(), str)
+}
+
+// sha256 hash string
+func Sha256(str string) string {
+	return sha(sha256.New(), str)
 }
 
 // trim space on left
