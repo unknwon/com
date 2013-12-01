@@ -104,6 +104,7 @@ func CopyDir(srcPath, destPath string) error {
 	}
 
 	for _, info := range infos {
+		println(info)
 		curPath := path.Join(destPath, info)
 		if strings.HasSuffix(info, "/") {
 			err = os.Mkdir(curPath, os.ModePerm)
