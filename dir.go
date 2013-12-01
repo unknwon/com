@@ -48,11 +48,10 @@ func statDir(dirPath, recPath string, includeDir bool) ([]string, error) {
 		relPath := strings.TrimPrefix(path.Join(recPath, fi.Name()), "/")
 		curPath := strings.TrimPrefix(path.Join(dirPath, fi.Name()), "/")
 		if fi.IsDir() {
-			recPath = relPath
 			if includeDir {
 				statList = append(statList, relPath+"/")
 			}
-			s, err := statDir(curPath, recPath, includeDir)
+			s, err := statDir(curPath, relPath, includeDir)
 			if err != nil {
 				return nil, err
 			}
