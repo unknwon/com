@@ -31,7 +31,7 @@ func TestHttpGet(t *testing.T) {
 	// 200.
 	rc, err := HttpGet(&http.Client{}, "http://example.com", nil)
 	if err != nil {
-		t.Errorf("HttpGet:\n Expect => %v\n Got => %s\n", nil, err)
+		t.Fatalf("HttpGet:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 	p, err := ioutil.ReadAll(rc)
 	if err != nil {

@@ -24,10 +24,9 @@ func AppendStr(strs []string, str string) []string {
 	return append(strs, str)
 }
 
-// CompareSliceStr compares two 'string' type slices,
-// it returns true if elements and indexes are all the same.
+// CompareSliceStr compares two 'string' type slices.
+// It returns true if elements and indexes are both the same.
 func CompareSliceStr(s1, s2 []string) bool {
-	// Length.
 	if len(s1) != len(s2) {
 		return false
 	}

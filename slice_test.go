@@ -17,6 +17,8 @@ package com
 import (
 	"fmt"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestAppendStr(t *testing.T) {
@@ -29,9 +31,24 @@ func TestAppendStr(t *testing.T) {
 	}
 }
 
+func TestCompareSliceStr(t *testing.T) {
+	Convey("Compares two 'string' type slices with elements and indexes", t, func() {
+		So(CompareSliceStr(
+			[]string{"1", "2", "3"}, []string{"1", "2", "3"}), ShouldEqual, true)
+	})
+}
+
 func BenchmarkAppendStr(b *testing.B) {
 	s := []string{"a"}
 	for i := 0; i < b.N; i++ {
 		s = AppendStr(s, fmt.Sprint(b.N%3))
+	}
+}
+
+func BenchmarkCompareSliceStr(b *testing.B) {
+	s1 := []string{"1", "2", "3"}
+	s2 := []string{"1", "2", "3"}
+	for i := 0; i < b.N; i++ {
+		CompareSliceStr(s1, s2)
 	}
 }

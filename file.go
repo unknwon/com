@@ -61,7 +61,8 @@ func FileSize(file string) (int64, error) {
 	return f.Size(), nil
 }
 
-// copy file to new path
+// Copy copies file from source to target path.
+// It returns false and error when error occurs in underlying functions.
 func Copy(file string, to string) (bool, error) {
 	sf, e := os.Open(file)
 	if e != nil {
@@ -127,7 +128,8 @@ func IsFile(filePath string) bool {
 	return !f.IsDir()
 }
 
-// IsExist returns whether a file or directory exists.
+// IsExist checks whether a file or directory exists.
+// It returns false when the file or directory does not exist.
 func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil || os.IsExist(err)
@@ -197,7 +199,7 @@ func Unzip(srcPath, destPath string) ([]string, error) {
 		}
 
 		// Write data to file
-		fw, _ := os.Create(path.Join(destPath,f.Name))
+		fw, _ := os.Create(path.Join(destPath, f.Name))
 		if err != nil {
 			return nil, err
 		}
