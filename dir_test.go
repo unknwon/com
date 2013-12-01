@@ -47,6 +47,7 @@ func TestCopyDir(t *testing.T) {
 		os.RemoveAll("testdata2")
 		So(err, ShouldEqual, nil)
 
+		println(s1, s2)
 		So(CompareSliceStr(s1, s2), ShouldEqual, true)
 	})
 }
