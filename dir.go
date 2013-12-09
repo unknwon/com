@@ -84,8 +84,12 @@ func StatDir(dirPath string, includeDir ...bool) ([]string, error) {
 }
 
 // CopyDir copy files recursively from source to target directory.
+//
+// The filter accepts a function that process the path info.
+// and should return true for need to filter.
+//
 // It returns error when error occurs in underlying functions.
-func CopyDir(srcPath, destPath string) error {
+func CopyDir(srcPath, destPath string, filters ...func(filePath string) bool) error {
 	// Check if target directory exists.
 	if IsExist(destPath) {
 		return errors.New("file or directory alreay exists: " + destPath)
@@ -102,7 +106,16 @@ func CopyDir(srcPath, destPath string) error {
 		return err
 	}
 
+	var filter func(filePath string) bool
+	if len(filters) > 0 {
+		filter = filters[0]
+	}
+
 	for _, info := range infos {
+		if filter != nil && filter(info) {
+			continue
+		}
+
 		curPath := path.Join(destPath, info)
 		if strings.HasSuffix(info, "/") {
 			err = os.Mkdir(curPath, os.ModePerm)
