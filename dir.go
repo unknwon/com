@@ -95,7 +95,7 @@ func CopyDir(srcPath, destPath string, filters ...func(filePath string) bool) er
 		return errors.New("file or directory alreay exists: " + destPath)
 	}
 
-	err := os.Mkdir(destPath, os.ModePerm)
+	err := os.MkdirAll(destPath, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -118,7 +118,7 @@ func CopyDir(srcPath, destPath string, filters ...func(filePath string) bool) er
 
 		curPath := path.Join(destPath, info)
 		if strings.HasSuffix(info, "/") {
-			err = os.Mkdir(curPath, os.ModePerm)
+			err = os.MkdirAll(curPath, os.ModePerm)
 		} else {
 			_, err = Copy(path.Join(srcPath, info), curPath)
 		}
