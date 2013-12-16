@@ -39,3 +39,24 @@ func CompareSliceStr(s1, s2 []string) bool {
 
 	return true
 }
+
+// CompareSliceStr compares two 'string' type slices.
+// It returns true if elements are the same, do not bother the order of list.
+func CompareSliceStrU(s1, s2 []string) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+
+	for i := range s1 {
+		for j := len(s2) - 1; j >= 0; j-- {
+			if s1[i] == s2[j] {
+				s2 = append(s2[:j], s2[j+1]...)
+				break
+			}
+		}
+	}
+	if len(s2) > 0 {
+		return false
+	}
+	return true
+}
