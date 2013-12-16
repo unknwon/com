@@ -14,7 +14,7 @@
 
 package com
 
-// AppendStr appends string to slice with no duplicate.
+// AppendStr appends string to slice with no duplicates.
 func AppendStr(strs []string, str string) []string {
 	for _, s := range strs {
 		if s == str {
@@ -25,7 +25,7 @@ func AppendStr(strs []string, str string) []string {
 }
 
 // CompareSliceStr compares two 'string' type slices.
-// It returns true if elements and indexes are both the same.
+// It returns true if elements and order are both the same.
 func CompareSliceStr(s1, s2 []string) bool {
 	if len(s1) != len(s2) {
 		return false
@@ -41,7 +41,7 @@ func CompareSliceStr(s1, s2 []string) bool {
 }
 
 // CompareSliceStr compares two 'string' type slices.
-// It returns true if elements are the same, do not bother the order of list.
+// It returns true if elements are the same, and ignores the order.
 func CompareSliceStrU(s1, s2 []string) bool {
 	if len(s1) != len(s2) {
 		return false
@@ -50,7 +50,7 @@ func CompareSliceStrU(s1, s2 []string) bool {
 	for i := range s1 {
 		for j := len(s2) - 1; j >= 0; j-- {
 			if s1[i] == s2[j] {
-				s2 = append(s2[:j], s2[j+1]...)
+				s2 = append(s2[:j], s2[j+1:]...)
 				break
 			}
 		}
