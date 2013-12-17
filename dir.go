@@ -45,6 +45,10 @@ func statDir(dirPath, recPath string, includeDir bool) ([]string, error) {
 
 	statList := make([]string, 0)
 	for _, fi := range fis {
+		if strings.Contains(fi.Name(), ".DS_Store") {
+			continue
+		}
+
 		relPath := path.Join(recPath, fi.Name())
 		curPath := path.Join(dirPath, fi.Name())
 		if fi.IsDir() {
