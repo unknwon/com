@@ -17,7 +17,6 @@ package com
 import (
 	"errors"
 	"os"
-	"os/user"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -63,19 +62,19 @@ func GetSrcPath(importPath string) (appPath string, err error) {
 
 // HomeDir returns path of '~'(in Linux) on Windows,
 // it returns error when the variable does not exist.
-func HomeDir() (string, error) {
-	if runtime.GOOS != "windows" {
-		curUser, err := user.Current()
-		if err != nil {
-			return "", err
+func HomeDir() (home string, err error) {
+	if runtime.GOOS == "windows" {
+		home = os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
 		}
-		return curUser.HomeDir, nil
 	} else {
-		dir := os.Getenv("userprofile")
-		if dir == "" {
-			return "", errors.New("Environment variable 'userprofile' does not exist")
-		}
-		return dir, nil
+		home = os.Getenv("HOME")
 	}
-	return "", nil
+
+	if len(home) == 0 {
+		return "", errors.New("Cannot specify home directory because it's empty")
+	}
+
+	return home, nil
 }
