@@ -151,8 +151,8 @@ func ExecCmd(cmdName string, args ...string) (string, string, error) {
 		return "", "", err
 	}
 
-	go io.Copy(bufOut, stdout)
-	go io.Copy(bufErr, stderr)
+	io.Copy(bufOut, stdout)
+	io.Copy(bufErr, stderr)
 
 	cmd.Wait()
 
