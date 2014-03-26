@@ -129,13 +129,13 @@ func getColorLevel(level string) string {
 }
 
 // ------------- END ------------
-
-// ExecCmd executes system command and returns output, stderr(both string type) and error.
-func ExecCmd(cmdName string, args ...string) (string, string, error) {
+// ExecCmd executes system command and returns output, stderr(both string type) and error in given work directory.
+func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
 	bufOut := new(bytes.Buffer)
 	bufErr := new(bytes.Buffer)
 
 	cmd := exec.Command(cmdName, args...)
+	cmd.Dir = dir
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return "", "", err
@@ -157,4 +157,9 @@ func ExecCmd(cmdName string, args ...string) (string, string, error) {
 	cmd.Wait()
 
 	return bufOut.String(), bufErr.String(), nil
+}
+
+// ExecCmd executes system command and returns output, stderr(both string type) and error.
+func ExecCmd(cmdName string, args ...string) (string, string, error) {
+	return ExecCmdDir("", cmdName, args...)
 }
