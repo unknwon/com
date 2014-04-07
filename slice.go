@@ -14,6 +14,10 @@
 
 package com
 
+import (
+	"strings"
+)
+
 // AppendStr appends string to slice with no duplicates.
 func AppendStr(strs []string, str string) []string {
 	for _, s := range strs {
@@ -59,4 +63,15 @@ func CompareSliceStrU(s1, s2 []string) bool {
 		return false
 	}
 	return true
+}
+
+// IsSliceContainsStr returns true if a string exists in given slice.
+func IsSliceContainsStr(sl []string, str string) bool {
+	str = strings.ToLower(str)
+	for _, s := range sl {
+		if strings.ToLower(s) == str {
+			return true
+		}
+	}
+	return false
 }
