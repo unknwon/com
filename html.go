@@ -27,6 +27,7 @@ func Html2JS(data []byte) []byte {
 	s = strings.Replace(s, "\n", `\n`, -1)
 	s = strings.Replace(s, "\r", "", -1)
 	s = strings.Replace(s, "\"", `\"`, -1)
+	s = strings.Replace(s, "<table>", "&lt;table>", -1)
 	return []byte(s)
 }
 
