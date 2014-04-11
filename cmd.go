@@ -129,8 +129,9 @@ func getColorLevel(level string) string {
 }
 
 // ------------- END ------------
-// ExecCmd executes system command and returns output, stderr(both string type) and error in given work directory.
-func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
+
+func ExecCmdDirBytes(dir, cmdName string, args ...string) ([]byte, []byte, error) {
+	zeroByte := []byte("")
 	bufOut := new(bytes.Buffer)
 	bufErr := new(bytes.Buffer)
 
@@ -138,17 +139,17 @@ func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
 	cmd.Dir = dir
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return "", "", err
+		return zeroByte, zeroByte, err
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		return "", "", err
+		return zeroByte, zeroByte, err
 	}
 
 	err = cmd.Start()
 	if err != nil {
-		return "", "", err
+		return zeroByte, zeroByte, err
 	}
 
 	io.Copy(bufOut, stdout)
@@ -156,10 +157,20 @@ func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
 
 	cmd.Wait()
 
-	return bufOut.String(), bufErr.String(), nil
+	return bufOut.Bytes(), bufErr.Bytes(), nil
+}
+
+// ExecCmd executes system command and returns output, stderr(both string type) and error in given work directory.
+func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
+	bufOut, bufErr, err := ExecCmdDirBytes(dir, cmdName, args...)
+	return string(bufOut), string(bufErr), err
 }
 
 // ExecCmd executes system command and returns output, stderr(both string type) and error.
 func ExecCmd(cmdName string, args ...string) (string, string, error) {
 	return ExecCmdDir("", cmdName, args...)
+}
+
+func ExecCmdBytes(cmdName string, args ...string) ([]byte, []byte, error) {
+	return ExecCmdDirBytes("", cmdName, args...)
 }
