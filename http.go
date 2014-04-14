@@ -75,9 +75,8 @@ func HttpGetBytes(client *http.Client, url string, header http.Header) ([]byte, 
 	if err != nil {
 		return nil, err
 	}
-	p, err := ioutil.ReadAll(rc)
-	rc.Close()
-	return p, err
+	defer rc.Close()
+	return ioutil.ReadAll(rc)
 }
 
 // HttpGetJSON gets the specified resource and mapping to struct.
