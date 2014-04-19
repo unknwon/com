@@ -63,59 +63,51 @@ func FileSize(file string) (int64, error) {
 
 // Copy copies file from source to target path.
 // It returns false and error when error occurs in underlying functions.
-func Copy(file string, to string) (bool, error) {
-	sf, e := os.Open(file)
-	if e != nil {
-		return false, e
+func Copy(srcPath, destPath string) error {
+	sf, err := os.Open(srcPath)
+	if err != nil {
+		return err
 	}
 	defer sf.Close()
-	df, e2 := os.Create(to)
-	if e2 != nil {
-		return false, e2
+
+	si, err := os.Lstat(srcPath)
+	if err != nil {
+		return err
+	}
+
+	// Symbolic link.
+	if si.Mode()&os.ModeSymlink != 0 {
+		target, err := os.Readlink(srcPath)
+		if err != nil {
+			return err
+		}
+		return os.Symlink(target, destPath)
+	}
+
+	df, err := os.Create(destPath)
+	if err != nil {
+		return err
 	}
 	defer df.Close()
+
 	// buffer reader, do chunk transfer
 	buf := make([]byte, 1024)
 	for {
 		// read a chunk
 		n, err := sf.Read(buf)
 		if err != nil && err != io.EOF {
-			return false, err
+			return err
 		}
 		if n == 0 {
 			break
 		}
 		// write a chunk
 		if _, err := df.Write(buf[:n]); err != nil {
-			return false, err
+			return err
 		}
 	}
-	return true, nil
-}
 
-// move file to new path
-func Move(file string, to string) (bool, error) {
-	// copy
-	r, e := Copy(file, to)
-	if e != nil {
-		return r, e
-	}
-	// then remove
-	e = os.Remove(file)
-	if e != nil {
-		r = false
-	}
-	return r, e
-}
-
-// delete file
-func Unlink(file string) error {
-	return os.Remove(file)
-}
-
-// rename file name
-func Rename(file string, to string) error {
-	return os.Rename(file, to)
+	return os.Chmod(destPath, si.Mode())
 }
 
 // IsFile checks whether the path is a file,

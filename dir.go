@@ -124,7 +124,7 @@ func CopyDir(srcPath, destPath string, filters ...func(filePath string) bool) er
 		if strings.HasSuffix(info, "/") {
 			err = os.MkdirAll(curPath, os.ModePerm)
 		} else {
-			_, err = Copy(path.Join(srcPath, info), curPath)
+			err = Copy(path.Join(srcPath, info), curPath)
 		}
 		if err != nil {
 			return err
