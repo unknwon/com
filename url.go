@@ -1,15 +1,13 @@
-
 package com
 
 import (
-	"net/url"
 	"encoding/base64"
+	"net/url"
 )
 
 // url encode string, is + not %20
 func UrlEncode(str string) string {
-	s := url.QueryEscape(str)
-	return s
+	return url.QueryEscape(str)
 }
 
 // url decode string
@@ -27,4 +25,3 @@ func Base64Decode(str string) (string, error) {
 	s, e := base64.StdEncoding.DecodeString(str)
 	return string(s), e
 }
-
