@@ -18,7 +18,6 @@ package com
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -131,33 +130,16 @@ func getColorLevel(level string) string {
 // ------------- END ------------
 
 func ExecCmdDirBytes(dir, cmdName string, args ...string) ([]byte, []byte, error) {
-	zeroByte := []byte("")
 	bufOut := new(bytes.Buffer)
 	bufErr := new(bytes.Buffer)
 
 	cmd := exec.Command(cmdName, args...)
 	cmd.Dir = dir
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return zeroByte, zeroByte, err
-	}
+	cmd.Stdout = bufOut
+	cmd.Stderr = bufErr
 
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return zeroByte, zeroByte, err
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		return zeroByte, zeroByte, err
-	}
-
-	io.Copy(bufOut, stdout)
-	io.Copy(bufErr, stderr)
-
-	cmd.Wait()
-
-	return bufOut.Bytes(), bufErr.Bytes(), nil
+	err := cmd.Run()
+	return bufOut.Bytes(), bufErr.Bytes(), err
 }
 
 // ExecCmd executes system command and returns output, stderr(both string type) and error in given work directory.
