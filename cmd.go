@@ -18,6 +18,7 @@ package com
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -136,12 +137,26 @@ func ExecCmdDirBytes(dir, cmdName string, args ...string) ([]byte, []byte, error
 
 	cmd := exec.Command(cmdName, args...)
 	cmd.Dir = dir
-	cmd.Stdout = bufOut
-	cmd.Stderr = bufErr
-
-	if err := cmd.Run(); err != nil {
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
 		return zeroByte, zeroByte, err
 	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return zeroByte, zeroByte, err
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return zeroByte, zeroByte, err
+	}
+
+	io.Copy(bufOut, stdout)
+	io.Copy(bufErr, stderr)
+
+	cmd.Wait()
+
 	return bufOut.Bytes(), bufErr.Bytes(), nil
 }
 
