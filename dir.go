@@ -31,7 +31,7 @@ func IsDir(dir string) bool {
 	return f.IsDir()
 }
 
-func statDir(dirPath, recPath string, includeDir bool) ([]string, error) {
+func statDir(dirPath, recPath string, includeDir, isDirOnly bool) ([]string, error) {
 	dir, err := os.Open(dirPath)
 	if err != nil {
 		return nil, err
@@ -55,12 +55,12 @@ func statDir(dirPath, recPath string, includeDir bool) ([]string, error) {
 			if includeDir {
 				statList = append(statList, relPath+"/")
 			}
-			s, err := statDir(curPath, relPath, includeDir)
+			s, err := statDir(curPath, relPath, includeDir, isDirOnly)
 			if err != nil {
 				return nil, err
 			}
 			statList = append(statList, s...)
-		} else {
+		} else if !isDirOnly {
 			statList = append(statList, relPath)
 		}
 	}
@@ -74,9 +74,9 @@ func statDir(dirPath, recPath string, includeDir bool) ([]string, error) {
 //
 // Slice does not include given path itself.
 // If subdirectories is enabled, they will have suffix '/'.
-func StatDir(dirPath string, includeDir ...bool) ([]string, error) {
-	if !IsDir(dirPath) {
-		return nil, errors.New("not a directory or does not exist: " + dirPath)
+func StatDir(rootPath string, includeDir ...bool) ([]string, error) {
+	if !IsDir(rootPath) {
+		return nil, errors.New("not a directory or does not exist: " + rootPath)
 	}
 
 	isIncludeDir := false
@@ -84,7 +84,16 @@ func StatDir(dirPath string, includeDir ...bool) ([]string, error) {
 		isIncludeDir = includeDir[0]
 	}
 
-	return statDir(dirPath, "", isIncludeDir)
+	return statDir(rootPath, "", isIncludeDir, false)
+}
+
+// GetAllSubDirs returns all subdirectories of given root path.
+// Slice does not include given path itself.
+func GetAllSubDirs(rootPath string) ([]string, error) {
+	if !IsDir(rootPath) {
+		return nil, errors.New("not a directory or does not exist: " + rootPath)
+	}
+	return statDir(rootPath, "", true, true)
 }
 
 // CopyDir copy files recursively from source to target directory.
