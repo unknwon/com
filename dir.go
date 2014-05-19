@@ -21,8 +21,8 @@ import (
 	"strings"
 )
 
-// IsDir checks whether the path is a directory.
-// It returns false when it's a file or does not exist.
+// IsDir returns true if given path is a directory,
+// or returns false when it's a file or does not exist.
 func IsDir(dir string) bool {
 	f, e := os.Stat(dir)
 	if e != nil {
@@ -83,7 +83,6 @@ func StatDir(rootPath string, includeDir ...bool) ([]string, error) {
 	if len(includeDir) >= 1 {
 		isIncludeDir = includeDir[0]
 	}
-
 	return statDir(rootPath, "", isIncludeDir, false)
 }
 

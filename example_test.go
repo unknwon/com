@@ -106,38 +106,6 @@ func ExampleIsExist() {
 	fmt.Println("file.go does not exist")
 }
 
-func ExampleSaveFile() {
-	s := "ExampleSaveFile"
-	n, err := com.SaveFile("SaveFile.txt", []byte(s))
-	fmt.Println(n, err)
-}
-
-func ExampleSaveFileS() {
-	s := "ExampleSaveFileS"
-	n, err := com.SaveFileS("SaveFileS.txt", s)
-	fmt.Println(n, err)
-}
-
-func ExampleReadFile() {
-	b, err := com.ReadFile("SaveFile.txt")
-	fmt.Println(string(b), err)
-}
-
-func ExampleReadFileS() {
-	s, err := com.ReadFileS("SaveFileS.txt")
-	fmt.Println(s, err)
-}
-
-func ExampleUnzip() {
-	dirs, err := com.Unzip("src/file/path", "dest/file/path")
-	fmt.Println(dirs, err)
-}
-
-func ExampleUnTarGz() {
-	dirs, err := com.UnTarGz("src/file/path", "dest/file/path")
-	fmt.Println(dirs, err)
-}
-
 // ------------- END ------------
 
 // ------------------------------

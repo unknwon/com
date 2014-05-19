@@ -1,3 +1,17 @@
+// Copyright 2013 com authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License"): you may
+// not use this file except in compliance with the License. You may obtain
+// a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations
+// under the License.
+
 package com
 
 import (
@@ -11,43 +25,6 @@ import (
 	"strings"
 	"unicode"
 )
-
-// explode string with proper chars
-func Explode(str string, sep string) []string {
-	return strings.Split(str, sep)
-}
-
-// join string array to string with connection chars
-func Join(str []string, sep string) string {
-	return strings.Join(str, sep)
-}
-
-// substring from start position and belong length
-func SubStr(str string, start, length int) string {
-	rs := []rune(str)
-	rl := len(rs)
-	end := 0
-	if start < 0 {
-		start = rl - 1 + start
-	}
-	end = start + length
-	if start > end {
-		start, end = end, start
-	}
-	if start < 0 {
-		start = 0
-	}
-	if start > rl {
-		start = rl
-	}
-	if end < 0 {
-		end = 0
-	}
-	if end > rl {
-		end = rl
-	}
-	return string(rs[start:end])
-}
 
 // md5 hash string
 func Md5(str string) string {
@@ -94,26 +71,6 @@ func StrRepeat(str string, times int) string {
 // replace find all occurs to string
 func StrReplace(str string, find string, to string) string {
 	return strings.Replace(str, find, to, -1)
-}
-
-// find the first occur position, if not found return -1
-func StrPos(str string, find string) int {
-	return strings.Index(str, find)
-}
-
-// convert to upper
-func StrToUpper(str string) string {
-	return strings.ToUpper(str)
-}
-
-// convert to lower
-func StrToLower(str string) string {
-	return strings.ToLower(str)
-}
-
-// convert first letter to upper
-func UcFirst(str string) string {
-	return strings.Title(str)
 }
 
 // IsLetter returns true if the 'l' is an English letter.

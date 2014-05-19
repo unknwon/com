@@ -15,17 +15,13 @@
 package com
 
 import (
-	"archive/tar"
-	"archive/zip"
-	"compress/gzip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math"
 	"os"
-	"path"
 )
 
+// Storage unit constants.
 const (
 	Byte  = 1
 	KByte = Byte * 1024
@@ -35,16 +31,6 @@ const (
 	PByte = TByte * 1024
 	EByte = PByte * 1024
 )
-
-var bytesSizeTable = map[string]uint64{
-	"b":  Byte,
-	"kb": KByte,
-	"mb": MByte,
-	"gb": GByte,
-	"tb": TByte,
-	"pb": PByte,
-	"eb": EByte,
-}
 
 func logn(n, b float64) float64 {
 	return math.Log(n) / math.Log(b)
@@ -71,84 +57,68 @@ func HumaneFileSize(s int64) string {
 	return humanateBytes(uint64(s), 1024, sizes)
 }
 
-// get absolute filepath, based on built executable file
-func RealPath(file string) (string, error) {
-	if path.IsAbs(file) {
-		return file, nil
-	}
-	wd, err := os.Getwd()
-	return path.Join(wd, file), err
-}
-
-// get file modified time
+// FileMTime returns file modified time and possible error.
 func FileMTime(file string) (int64, error) {
-	f, e := os.Stat(file)
-	if e != nil {
-		return 0, e
+	f, err := os.Stat(file)
+	if err != nil {
+		return 0, err
 	}
 	return f.ModTime().Unix(), nil
 }
 
-// get file size as how many bytes
+// FileSize returns file size in bytes and possible error.
 func FileSize(file string) (int64, error) {
-	f, e := os.Stat(file)
-	if e != nil {
-		return 0, e
+	f, err := os.Stat(file)
+	if err != nil {
+		return 0, err
 	}
 	return f.Size(), nil
 }
 
 // Copy copies file from source to target path.
-// It returns false and error when error occurs in underlying functions.
-func Copy(srcPath, destPath string) error {
-	sf, err := os.Open(srcPath)
-	if err != nil {
-		return err
-	}
-	defer sf.Close()
-
-	si, err := os.Lstat(srcPath)
+func Copy(src, dest string) error {
+	// Gather file information to set back later.
+	si, err := os.Lstat(src)
 	if err != nil {
 		return err
 	}
 
-	// Symbolic link.
+	// Handle symbolic link.
 	if si.Mode()&os.ModeSymlink != 0 {
-		target, err := os.Readlink(srcPath)
+		target, err := os.Readlink(src)
 		if err != nil {
 			return err
 		}
-		return os.Symlink(target, destPath)
+		// NOTE: os.Chmod and os.Chtimes don't recoganize symbolic link,
+		// which will lead "no such file or directory" error.
+		return os.Symlink(target, dest)
 	}
 
-	df, err := os.Create(destPath)
+	sr, err := os.Open(src)
 	if err != nil {
 		return err
 	}
-	defer df.Close()
+	defer sr.Close()
 
-	// buffer reader, do chunk transfer
-	buf := make([]byte, 1024)
-	for {
-		// read a chunk
-		n, err := sf.Read(buf)
-		if err != nil && err != io.EOF {
-			return err
-		}
-		if n == 0 {
-			break
-		}
-		// write a chunk
-		if _, err := df.Write(buf[:n]); err != nil {
-			return err
-		}
+	dw, err := os.Create(dest)
+	if err != nil {
+		return err
+	}
+	defer dw.Close()
+
+	if _, err = io.Copy(dw, sr); err != nil {
+		return err
 	}
 
-	return os.Chmod(destPath, si.Mode())
+	// Set back file information.
+	if err = os.Chtimes(dest, si.ModTime(), si.ModTime()); err != nil {
+		return err
+	}
+	return os.Chmod(dest, si.Mode())
 }
 
-// IsFile checks whether the path is a file,
-// it returns false when it's a directory or does not exist.
+// IsFile returns true if given path is a file,
+// or returns false when it's a directory or does not exist.
 func IsFile(filePath string) bool {
 	f, e := os.Stat(filePath)
 	if e != nil {
@@ -162,136 +132,4 @@ func IsFile(filePath string) bool {
 func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil || os.IsExist(err)
-}
-
-// SaveFile saves content type '[]byte' to file by given path.
-// It returns error when fail to finish operation.
-func SaveFile(filePath string, b []byte) (int, error) {
-	os.MkdirAll(path.Dir(filePath), os.ModePerm)
-	fw, err := os.Create(filePath)
-	if err != nil {
-		return 0, err
-	}
-	defer fw.Close()
-	return fw.Write(b)
-}
-
-// SaveFileS saves content type 'string' to file by given path.
-// It returns error when fail to finish operation.
-func SaveFileS(filePath string, s string) (int, error) {
-	return SaveFile(filePath, []byte(s))
-}
-
-// ReadFile reads data type '[]byte' from file by given path.
-// It returns error when fail to finish operation.
-func ReadFile(filePath string) ([]byte, error) {
-	b, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return []byte(""), err
-	}
-	return b, nil
-}
-
-// ReadFileS reads data type 'string' from file by given path.
-// It returns error when fail to finish operation.
-func ReadFileS(filePath string) (string, error) {
-	b, err := ReadFile(filePath)
-	return string(b), err
-}
-
-// Unzip unzips .zip file to 'destPath' and returns sub-directories.
-// It returns error when fail to finish operation.
-func Unzip(srcPath, destPath string) ([]string, error) {
-	// Open a zip archive for reading
-	r, err := zip.OpenReader(srcPath)
-	if err != nil {
-		return nil, err
-	}
-	defer r.Close()
-
-	dirs := make([]string, 0, 5)
-	// Iterate through the files in the archive
-	for _, f := range r.File {
-		// Get files from archive
-		rc, err := f.Open()
-		if err != nil {
-			return nil, err
-		}
-
-		dir := path.Dir(f.Name)
-		// Create directory before create file
-		os.MkdirAll(destPath+"/"+dir, os.ModePerm)
-		dirs = AppendStr(dirs, dir)
-
-		if f.FileInfo().IsDir() {
-			continue
-		}
-
-		// Write data to file
-		fw, _ := os.Create(path.Join(destPath, f.Name))
-		if err != nil {
-			return nil, err
-		}
-		_, err = io.Copy(fw, rc)
-
-		if fw != nil {
-			fw.Close()
-		}
-		if err != nil {
-			return nil, err
-		}
-	}
-	return dirs, nil
-}
-
-// UnTarGz ungzips and untars .tar.gz file to 'destPath' and returns sub-directories.
-// It returns error when fail to finish operation.
-func UnTarGz(srcFilePath string, destDirPath string) ([]string, error) {
-	// Create destination directory
-	os.Mkdir(destDirPath, os.ModePerm)
-
-	fr, err := os.Open(srcFilePath)
-	if err != nil {
-		return nil, err
-	}
-	defer fr.Close()
-
-	// Gzip reader
-	gr, err := gzip.NewReader(fr)
-	if err != nil {
-		return nil, err
-	}
-	defer gr.Close()
-
-	// Tar reader
-	tr := tar.NewReader(gr)
-
-	dirs := make([]string, 0, 5)
-	for {
-		hdr, err := tr.Next()
-		if err == io.EOF {
-			// End of tar archive
-			break
-		}
-
-		// Check if it is directory or file
-		if hdr.Typeflag != tar.TypeDir {
-			// Get files from archive
-			// Create directory before create file
-			dir := path.Dir(hdr.Name)
-			os.MkdirAll(destDirPath+"/"+dir, os.ModePerm)
-			dirs = AppendStr(dirs, dir)
-
-			// Write data to file
-			fw, _ := os.Create(destDirPath + "/" + hdr.Name)
-			if err != nil {
-				return nil, err
-			}
-			_, err = io.Copy(fw, tr)
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-	return dirs, nil
 }

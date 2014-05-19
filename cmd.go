@@ -1,3 +1,5 @@
+// +build go1.2
+
 // Copyright 2013 com authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -23,10 +25,48 @@ import (
 	"strings"
 )
 
-// ------------------------------
-// Color log output.
-// ------------------------------
+// ExecCmdDirBytes executes system command in given directory
+// and return stdout, stderr in bytes type, along with possible error.
+func ExecCmdDirBytes(dir, cmdName string, args ...string) ([]byte, []byte, error) {
+	bufOut := new(bytes.Buffer)
+	bufErr := new(bytes.Buffer)
 
+	cmd := exec.Command(cmdName, args...)
+	cmd.Dir = dir
+	cmd.Stdout = bufOut
+	cmd.Stderr = bufErr
+
+	err := cmd.Run()
+	return bufOut.Bytes(), bufErr.Bytes(), err
+}
+
+// ExecCmdBytes executes system command
+// and return stdout, stderr in bytes type, along with possible error.
+func ExecCmdBytes(cmdName string, args ...string) ([]byte, []byte, error) {
+	return ExecCmdDirBytes("", cmdName, args...)
+}
+
+// ExecCmdDir executes system command in given directory
+// and return stdout, stderr in string type, along with possible error.
+func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
+	bufOut, bufErr, err := ExecCmdDirBytes(dir, cmdName, args...)
+	return string(bufOut), string(bufErr), err
+}
+
+// ExecCmd executes system command
+// and return stdout, stderr in string type, along with possible error.
+func ExecCmd(cmdName string, args ...string) (string, string, error) {
+	return ExecCmdDir("", cmdName, args...)
+}
+
+// _________        .__                 .____
+// \_   ___ \  ____ |  |   ___________  |    |    ____   ____
+// /    \  \/ /  _ \|  |  /  _ \_  __ \ |    |   /  _ \ / ___\
+// \     \___(  <_> )  |_(  <_> )  | \/ |    |__(  <_> ) /_/  >
+//  \______  /\____/|____/\____/|__|    |_______ \____/\___  /
+//         \/                                   \/    /_____/
+
+// Color number constants.
 const (
 	Gray = uint8(iota + 90)
 	Red
@@ -38,10 +78,22 @@ const (
 	EndColor = "\033[0m"
 )
 
-// ColorLog colors log and print to stdout.
-// See color rules in function 'ColorLogS'.
-func ColorLog(format string, a ...interface{}) {
-	fmt.Print(ColorLogS(format, a...))
+// getColorLevel returns colored level string by given level.
+func getColorLevel(level string) string {
+	level = strings.ToUpper(level)
+	switch level {
+	case "TRAC":
+		return fmt.Sprintf("\033[%dm%s\033[0m", Blue, level)
+	case "ERRO":
+		return fmt.Sprintf("\033[%dm%s\033[0m", Red, level)
+	case "WARN":
+		return fmt.Sprintf("\033[%dm%s\033[0m", Magenta, level)
+	case "SUCC":
+		return fmt.Sprintf("\033[%dm%s\033[0m", Green, level)
+	default:
+		return level
+	}
+	return level
 }
 
 // ColorLogS colors log and return colored content.
@@ -59,7 +111,6 @@ func ColorLogS(format string, a ...interface{}) string {
 	var clog string
 
 	if runtime.GOOS != "windows" {
-
 		// Level.
 		i := strings.Index(log, "]")
 		if log[0] == '[' && i > -1 {
@@ -79,8 +130,6 @@ func ColorLogS(format string, a ...interface{}) string {
 		// Highlights.
 		log = strings.Replace(log, "# ", fmt.Sprintf("\033[%dm", Gray), -1)
 		log = strings.Replace(log, " #", EndColor, -1)
-
-		log = clog + log
 
 	} else {
 		// Level.
@@ -102,57 +151,12 @@ func ColorLogS(format string, a ...interface{}) string {
 		// Highlights.
 		log = strings.Replace(log, "# ", "", -1)
 		log = strings.Replace(log, " #", "", -1)
-
-		log = clog + log
 	}
-
-	return log
+	return clog + log
 }
 
-// getColorLevel returns colored level string by given level.
-func getColorLevel(level string) string {
-	level = strings.ToUpper(level)
-	switch level {
-	case "TRAC":
-		return fmt.Sprintf("\033[%dm%s\033[0m", Blue, level)
-	case "ERRO":
-		return fmt.Sprintf("\033[%dm%s\033[0m", Red, level)
-	case "WARN":
-		return fmt.Sprintf("\033[%dm%s\033[0m", Magenta, level)
-	case "SUCC":
-		return fmt.Sprintf("\033[%dm%s\033[0m", Green, level)
-	default:
-		return level
-	}
-	return level
-}
-
-// ------------- END ------------
-
-func ExecCmdDirBytes(dir, cmdName string, args ...string) ([]byte, []byte, error) {
-	bufOut := new(bytes.Buffer)
-	bufErr := new(bytes.Buffer)
-
-	cmd := exec.Command(cmdName, args...)
-	cmd.Dir = dir
-	cmd.Stdout = bufOut
-	cmd.Stderr = bufErr
-
-	err := cmd.Run()
-	return bufOut.Bytes(), bufErr.Bytes(), err
-}
-
-// ExecCmd executes system command and returns output, stderr(both string type) and error in given work directory.
-func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {
-	bufOut, bufErr, err := ExecCmdDirBytes(dir, cmdName, args...)
-	return string(bufOut), string(bufErr), err
-}
-
-// ExecCmd executes system command and returns output, stderr(both string type) and error.
-func ExecCmd(cmdName string, args ...string) (string, string, error) {
-	return ExecCmdDir("", cmdName, args...)
-}
-
-func ExecCmdBytes(cmdName string, args ...string) ([]byte, []byte, error) {
-	return ExecCmdDirBytes("", cmdName, args...)
+// ColorLog prints colored log to stdout.
+// See color rules in function 'ColorLogS'.
+func ColorLog(format string, a ...interface{}) {
+	fmt.Print(ColorLogS(format, a...))
 }

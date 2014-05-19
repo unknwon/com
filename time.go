@@ -65,9 +65,3 @@ func DateT(t time.Time, format string) string {
 	res = strings.Replace(res, "s", t.Format("5"), -1)
 	return res
 }
-
-// Get unix stamp int64 of now
-func Now() int64 {
-	return time.Now().Unix()
-}
-

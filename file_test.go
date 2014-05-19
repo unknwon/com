@@ -48,51 +48,6 @@ func TestIsExist(t *testing.T) {
 	})
 }
 
-func TestSaveFile(t *testing.T) {
-	s := "TestSaveFile"
-	n, err := SaveFile("testdata/SaveFile.txt", []byte(s))
-	if err != nil {
-		t.Errorf("SaveFile:\n Expect => %v\n Got => %v\n", nil, err)
-	} else if n == 0 {
-		t.Errorf("SaveFile:\n Expect => %d\n Got => %d\n", len(s), n)
-	}
-}
-
-func TestSaveFileS(t *testing.T) {
-	s := "TestSaveFileS"
-	n, err := SaveFileS("testdata/SaveFileS.txt", s)
-	if err != nil {
-		t.Errorf("SaveFileS:\n Expect => %v\n Got => %v\n", nil, err)
-	} else if n == 0 {
-		t.Errorf("SaveFileS:\n Expect => %d\n Got => %d\n", len(s), n)
-	}
-}
-
-func TestReadFile(t *testing.T) {
-	b, err := ReadFile("testdata/SaveFile.txt")
-	if err != nil {
-		t.Errorf("ReadFile:\n Expect => %v\n Got => %v\n", nil, err)
-	} else if string(b) != "TestSaveFile" {
-		t.Errorf("ReadFile:\n Expect => %s\n Got => %s\n", "TestSaveFile", string(b))
-	}
-}
-
-func TestReadFileS(t *testing.T) {
-	s, err := ReadFileS("testdata/SaveFileS.txt")
-	if err != nil {
-		t.Errorf("ReadFileS:\n Expect => %v\n Got => %v\n", nil, err)
-	} else if s != "TestSaveFileS" {
-		t.Errorf("ReadFileS:\n Expect => %s\n Got => %s\n", "TestSaveFileS", s)
-	}
-}
-
-func TestUnzip(t *testing.T) {
-
-}
-
-func TestUnTarGz(t *testing.T) {
-
-}
 
 func BenchmarkIsFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -104,24 +59,4 @@ func BenchmarkIsExist(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsExist("file.go")
 	}
-}
-
-func BenchmarkSaveFile(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		SaveFile("testdata/SaveFile.txt", []byte("TestSaveFile"))
-	}
-}
-
-func BenchmarkSaveFileS(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		SaveFileS("testdata/SaveFileS.txt", "TestSaveFileS")
-	}
-}
-
-func BenchmarkUnzip(b *testing.B) {
-
-}
-
-func BenchmarkUnTarGz(b *testing.B) {
-
 }
