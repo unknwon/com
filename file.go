@@ -17,8 +17,10 @@ package com
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"math"
 	"os"
+	"path"
 )
 
 // Storage unit constants.
@@ -115,6 +117,14 @@ func Copy(src, dest string) error {
 		return err
 	}
 	return os.Chmod(dest, si.Mode())
+}
+
+// WriteFile writes data to a file named by filename.
+// If the file does not exist, WriteFile creates it
+// and its upper level paths.
+func WriteFile(filename string, data []byte) error {
+	os.MkdirAll(path.Dir(filename), os.ModePerm)
+	return ioutil.WriteFile(filename, data, 0655)
 }
 
 // IsFile returns true if given path is a file,
