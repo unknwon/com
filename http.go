@@ -20,6 +20,8 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"path"
 )
 
 type NotFoundError struct {
@@ -66,6 +68,25 @@ func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser
 		err = &RemoteError{req.URL.Host, fmt.Errorf("get %s -> %d", url, resp.StatusCode)}
 	}
 	return nil, err
+}
+
+// HttpGetToFile gets the specified resource and writes to file.
+// ErrNotFound is returned if the server responds with status 404.
+func HttpGetToFile(client *http.Client, url string, header http.Header, fileName string) error {
+	rc, err := HttpGet(client, url, header)
+	if err != nil {
+		return err
+	}
+	defer rc.Close()
+
+	os.MkdirAll(path.Dir(fileName), os.ModePerm)
+	f, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	_, err = io.Copy(f, rc)
+	return err
 }
 
 // HttpGetBytes gets the specified resource. ErrNotFound is returned if the server
