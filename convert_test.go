@@ -20,7 +20,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func Test_hexStr2int(t *testing.T) {
+func TestHexStr2int(t *testing.T) {
 	Convey("Convert hex format string to decimal", t, func() {
 			hexDecs := map[string]int{
 			"1":   1,
@@ -29,7 +29,7 @@ func Test_hexStr2int(t *testing.T) {
 		}
 
 			for hex, dec := range hexDecs {
-				val, err := hexStr2int(hex)
+				val, err := HexStr2int(hex)
 				So(err, ShouldBeNil)
 				So(val, ShouldEqual, dec)
 			}
