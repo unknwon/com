@@ -98,19 +98,19 @@ func HexStr2int(hexStr string) (int, error) {
 	num := 0
 	length := len(hexStr)
 	for i := 0; i < length; i++ {
-		char := hexStr[length - i - 1]
+		char := hexStr[length-i-1]
 		factor := -1
 
 		switch {
 		case char >= '0' && char <= '9':
-			factor = int(char)-'0'
+			factor = int(char) - '0'
 		case char >= 'a' && char <= 'f':
-			factor = int(char)-'a'+10
+			factor = int(char) - 'a' + 10
 		default:
-			return -1, fmt.Errorf("invalid hex: %s", char)
+			return -1, fmt.Errorf("invalid hex: %s", string(char))
 		}
 
-		num += factor*PowInt(16, i)
+		num += factor * PowInt(16, i)
 	}
 	return num, nil
 }
