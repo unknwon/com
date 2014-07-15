@@ -134,3 +134,20 @@ func HexStr2int(hexStr string) (int, error) {
 	}
 	return num, nil
 }
+
+// Int2HexStr converts decimal number to hex format string.
+func Int2HexStr(num int) (hex string) {
+	for num > 0 {
+		r := num % 16
+
+		c := "?"
+		if r >= 0 && r <= 9 {
+			c = string(r + '0')
+		} else {
+			c = string(r + 'a' - 10)
+		}
+		hex = c + hex
+		num = num / 16
+	}
+	return hex
+}
