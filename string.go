@@ -15,7 +15,6 @@
 package com
 
 import (
-	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha1"
 	"crypto/sha256"
@@ -28,13 +27,6 @@ import (
 	"time"
 	"unicode"
 )
-
-// md5 hash string
-func Md5(str string) string {
-	m := md5.New()
-	io.WriteString(m, str)
-	return fmt.Sprintf("%x", m.Sum(nil))
-}
 
 func sha(m hash.Hash, str string) string {
 	io.WriteString(m, str)
@@ -59,16 +51,6 @@ func Ltrim(str string) string {
 // trim space on right
 func Rtrim(str string) string {
 	return strings.TrimRightFunc(str, unicode.IsSpace)
-}
-
-// trim space in all string length
-func Trim(str string) string {
-	return strings.TrimSpace(str)
-}
-
-// repeat string times
-func StrRepeat(str string, times int) string {
-	return strings.Repeat(str, times)
 }
 
 // replace find all occurs to string
