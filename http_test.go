@@ -41,14 +41,6 @@ func TestHttpGet(t *testing.T) {
 	if !strings.HasPrefix(s, examplePrefix) {
 		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", examplePrefix, s)
 	}
-
-	// 404.
-	rc, err = HttpGet(&http.Client{}, "http://example.com/foo", nil)
-	if err == nil {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", NotFoundError{}, nil)
-	} else if _, ok := err.(NotFoundError); !ok {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", NotFoundError{}, err)
-	}
 }
 
 func TestHttpGetBytes(t *testing.T) {
