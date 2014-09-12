@@ -56,16 +56,16 @@ func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, &RemoteError{req.URL.Host, err}
+		return nil, err
 	}
 	if resp.StatusCode == 200 {
 		return resp.Body, nil
 	}
 	resp.Body.Close()
 	if resp.StatusCode == 404 { // 403 can be rate limit error.  || resp.StatusCode == 403 {
-		err = NotFoundError{"Resource not found: " + url}
+		err = fmt.Errorf("resource not found: %s", url)
 	} else {
-		err = &RemoteError{req.URL.Host, fmt.Errorf("get %s -> %d", url, resp.StatusCode)}
+		err = fmt.Errorf("get %s -> %d", url, resp.StatusCode)
 	}
 	return nil, err
 }
@@ -110,9 +110,9 @@ func HttpGetJSON(client *http.Client, url string, v interface{}) error {
 	defer rc.Close()
 	err = json.NewDecoder(rc).Decode(v)
 	if _, ok := err.(*json.SyntaxError); ok {
-		err = NotFoundError{"JSON syntax error at " + url}
+		return fmt.Errorf("JSON syntax error at %s", url)
 	}
-	return err
+	return nil
 }
 
 // A RawFile describes a file that can be downloaded.
