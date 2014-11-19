@@ -26,9 +26,9 @@ const (
 )
 
 var (
-	regex_email *regexp.Regexp
+	regex_email        *regexp.Regexp
 	regex_strict_email *regexp.Regexp
-	regex_url *regexp.Regexp
+	regex_url          *regexp.Regexp
 )
 
 func init() {

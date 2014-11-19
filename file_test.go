@@ -48,7 +48,6 @@ func TestIsExist(t *testing.T) {
 	})
 }
 
-
 func BenchmarkIsFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsFile("file.go")
