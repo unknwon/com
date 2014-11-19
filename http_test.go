@@ -35,7 +35,7 @@ func TestHttpGet(t *testing.T) {
 	}
 	p, err := ioutil.ReadAll(rc)
 	if err != nil {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", nil, err)
+		t.Errorf("HttpGet:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 	s := string(p)
 	if !strings.HasPrefix(s, examplePrefix) {

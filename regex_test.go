@@ -20,14 +20,14 @@ import (
 
 func TestIsEmail(t *testing.T) {
 	emails := map[string]bool{
-		`test@example.com`:true,
-		`single-character@b.org`:true,
-		`uncommon_address@test.museum`:true,
-		`local@sld.UPPER`:true,
-		`@missing.org`:false,
-		`missing@.com`:false,
-		`missing@qq.`:false,
-		`wrong-ip@127.1.1.1.26`:false,
+		`test@example.com`:             true,
+		`single-character@b.org`:       true,
+		`uncommon_address@test.museum`: true,
+		`local@sld.UPPER`:              true,
+		`@missing.org`:                 false,
+		`missing@.com`:                 false,
+		`missing@qq.`:                  false,
+		`wrong-ip@127.1.1.1.26`:        false,
 	}
 	for e, r := range emails {
 		b := IsEmail(e)
@@ -39,15 +39,15 @@ func TestIsEmail(t *testing.T) {
 
 func TestIsUrl(t *testing.T) {
 	urls := map[string]bool{
-		"http://www.example.com":true,
-		"http://example.com":true,
-		"http://example.com?user=test&password=test":true,
-		"http://example.com?user=test#login":true,
-		"ftp://example.com":true,
-		"https://example.com":true,
-		"htp://example.com":false,
-		"http//example.com":false,
-		"http://example":true,
+		"http://www.example.com":                     true,
+		"http://example.com":                         true,
+		"http://example.com?user=test&password=test": true,
+		"http://example.com?user=test#login":         true,
+		"ftp://example.com":                          true,
+		"https://example.com":                        true,
+		"htp://example.com":                          false,
+		"http//example.com":                          false,
+		"http://example":                             true,
 	}
 	for u, r := range urls {
 		b := IsUrl(u)
@@ -68,5 +68,3 @@ func BenchmarkIsUrl(b *testing.B) {
 		IsEmail("http://example.com")
 	}
 }
-
-
