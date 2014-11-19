@@ -32,9 +32,9 @@ var (
 )
 
 func init() {
-	regex_email, _ = regexp.Compile(regex_email_pattern)
-	regex_strict_email, _ = regexp.Compile(regex_strict_email_pattern)
-	regex_url, _ = regexp.Compile(regex_url_pattern)
+	regex_email = regexp.MustCompile(regex_email_pattern)
+	regex_strict_email = regexp.MustCompile(regex_strict_email_pattern)
+	regex_url = regexp.MustCompile(regex_url_pattern)
 }
 
 // validate string is an email address, if not return false
