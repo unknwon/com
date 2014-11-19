@@ -93,7 +93,6 @@ func getColorLevel(level string) string {
 	default:
 		return level
 	}
-	return level
 }
 
 // ColorLogS colors log and return colored content.
