@@ -65,7 +65,7 @@ func CompareSliceStrU(s1, s2 []string) bool {
 	return true
 }
 
-// IsSliceContainsStr returns true if the string exists in given slice.
+// IsSliceContainsStr returns true if the string exists in given slice, ignore case.
 func IsSliceContainsStr(sl []string, str string) bool {
 	str = strings.ToLower(str)
 	for _, s := range sl {
