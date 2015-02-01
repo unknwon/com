@@ -7,3 +7,7 @@ go:
   - tip
 
 install: go get -v -t
+
+notifications:
+  email:
+    - u@gogs.io
