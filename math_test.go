@@ -1,4 +1,4 @@
-// Copyright 2014 com authors
+// Copyright 2015 com authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License"): you may
 // not use this file except in compliance with the License. You may obtain
@@ -15,21 +15,23 @@
 package com
 
 import (
-	"testing"
 	"math"
 	"math/rand"
+	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestPow(t *testing.T) {
-	for x := 0; x < 10; x++ {
-		for y := 0; y < 8; y++ {
-			result := PowInt(x, y)
-			result_float := math.Pow(float64(x), float64(y))
-			if result != int(result_float) {
-				t.Errorf("Unable to correctly compute %d to the power of %d. Expected: %d, got %d. ", x, y, int(result_float), result)
+func Test_Pow(t *testing.T) {
+	Convey("Power int", t, func() {
+		for x := 0; x < 10; x++ {
+			for y := 0; y < 8; y++ {
+				result := PowInt(x, y)
+				result_float := math.Pow(float64(x), float64(y))
+				So(result, ShouldEqual, int(result_float))
 			}
 		}
-	}
+	})
 }
 
 func BenchmarkPow(b *testing.B) {
