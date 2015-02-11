@@ -14,16 +14,29 @@
 
 package com
 
-// PowInt is int type of math.Pow function. 
-func PowInt(x int, y int) int {
-	if y <= 0 {
-		return 1
-	} else {
-		if y % 2 == 0 {
-			sqrt := PowInt(x, y/2)
-			return sqrt * sqrt
-		} else {
-			return PowInt(x, y-1) * x
+import (
+	"testing"
+	"math"
+	"math/rand"
+)
+
+func TestPow(t *testing.T) {
+	for x := 0; x < 10; x++ {
+		for y := 0; y < 8; y++ {
+			result := PowInt(x, y)
+			result_float := math.Pow(float64(x), float64(y))
+			if result != int(result_float) {
+				t.Errorf("Unable to correctly compute %d to the power of %d. Expected: %d, got %d. ", x, y, int(result_float), result)
+			}
 		}
+	}
+}
+
+func BenchmarkPow(b *testing.B) {
+	x := rand.Intn(100)
+	y := rand.Intn(6)
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		PowInt(x, y)
 	}
 }
