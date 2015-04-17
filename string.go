@@ -15,62 +15,56 @@
 package com
 
 import (
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"fmt"
-	"hash"
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/base64"
+	"errors"
 	"io"
+	r "math/rand"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
+	"unicode/utf8"
 )
 
-// md5 hash string
-func Md5(str string) string {
-	m := md5.New()
-	io.WriteString(m, str)
-	return fmt.Sprintf("%x", m.Sum(nil))
+// AESEncrypt encrypts text and given key with AES.
+func AESEncrypt(key, text []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	b := base64.StdEncoding.EncodeToString(text)
+	ciphertext := make([]byte, aes.BlockSize+len(b))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+	cfb := cipher.NewCFBEncrypter(block, iv)
+	cfb.XORKeyStream(ciphertext[aes.BlockSize:], []byte(b))
+	return ciphertext, nil
 }
 
-func sha(m hash.Hash, str string) string {
-	io.WriteString(m, str)
-	return fmt.Sprintf("%x", m.Sum(nil))
-}
-
-// sha1 hash string
-func Sha1(str string) string {
-	return sha(sha1.New(), str)
-}
-
-// sha256 hash string
-func Sha256(str string) string {
-	return sha(sha256.New(), str)
-}
-
-// trim space on left
-func Ltrim(str string) string {
-	return strings.TrimLeftFunc(str, unicode.IsSpace)
-}
-
-// trim space on right
-func Rtrim(str string) string {
-	return strings.TrimRightFunc(str, unicode.IsSpace)
-}
-
-// trim space in all string length
-func Trim(str string) string {
-	return strings.TrimSpace(str)
-}
-
-// repeat string times
-func StrRepeat(str string, times int) string {
-	return strings.Repeat(str, times)
-}
-
-// replace find all occurs to string
-func StrReplace(str string, find string, to string) string {
-	return strings.Replace(str, find, to, -1)
+// AESDecrypt decrypts text and given key with AES.
+func AESDecrypt(key, text []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	if len(text) < aes.BlockSize {
+		return nil, errors.New("ciphertext too short")
+	}
+	iv := text[:aes.BlockSize]
+	text = text[aes.BlockSize:]
+	cfb := cipher.NewCFBDecrypter(block, iv)
+	cfb.XORKeyStream(text, text)
+	data, err := base64.StdEncoding.DecodeString(string(text))
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 // IsLetter returns true if the 'l' is an English letter.
@@ -119,4 +113,131 @@ func Reverse(s string) string {
 		runes[n] = rune
 	}
 	return string(runes[n:])
+}
+
+// RandomCreateBytes generate random []byte by specify chars.
+func RandomCreateBytes(n int, alphabets ...byte) []byte {
+	const alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	var bytes = make([]byte, n)
+	var randby bool
+	if num, err := rand.Read(bytes); num != n || err != nil {
+		r.Seed(time.Now().UnixNano())
+		randby = true
+	}
+	for i, b := range bytes {
+		if len(alphabets) == 0 {
+			if randby {
+				bytes[i] = alphanum[r.Intn(len(alphanum))]
+			} else {
+				bytes[i] = alphanum[b%byte(len(alphanum))]
+			}
+		} else {
+			if randby {
+				bytes[i] = alphabets[r.Intn(len(alphabets))]
+			} else {
+				bytes[i] = alphabets[b%byte(len(alphabets))]
+			}
+		}
+	}
+	return bytes
+}
+
+// ToSnakeCase can convert all upper case characters in a string to
+// underscore format.
+//
+// Some samples.
+//     "FirstName"  => "first_name"
+//     "HTTPServer" => "http_server"
+//     "NoHTTPS"    => "no_https"
+//     "GO_PATH"    => "go_path"
+//     "GO PATH"    => "go_path"      // space is converted to underscore.
+//     "GO-PATH"    => "go_path"      // hyphen is converted to underscore.
+//
+// From https://github.com/huandu/xstrings
+func ToSnakeCase(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+
+	buf := &bytes.Buffer{}
+	var prev, r0, r1 rune
+	var size int
+
+	r0 = '_'
+
+	for len(str) > 0 {
+		prev = r0
+		r0, size = utf8.DecodeRuneInString(str)
+		str = str[size:]
+
+		switch {
+		case r0 == utf8.RuneError:
+			buf.WriteByte(byte(str[0]))
+
+		case unicode.IsUpper(r0):
+			if prev != '_' {
+				buf.WriteRune('_')
+			}
+
+			buf.WriteRune(unicode.ToLower(r0))
+
+			if len(str) == 0 {
+				break
+			}
+
+			r0, size = utf8.DecodeRuneInString(str)
+			str = str[size:]
+
+			if !unicode.IsUpper(r0) {
+				buf.WriteRune(r0)
+				break
+			}
+
+			// find next non-upper-case character and insert `_` properly.
+			// it's designed to convert `HTTPServer` to `http_server`.
+			// if there are more than 2 adjacent upper case characters in a word,
+			// treat them as an abbreviation plus a normal word.
+			for len(str) > 0 {
+				r1 = r0
+				r0, size = utf8.DecodeRuneInString(str)
+				str = str[size:]
+
+				if r0 == utf8.RuneError {
+					buf.WriteRune(unicode.ToLower(r1))
+					buf.WriteByte(byte(str[0]))
+					break
+				}
+
+				if !unicode.IsUpper(r0) {
+					if r0 == '_' || r0 == ' ' || r0 == '-' {
+						r0 = '_'
+
+						buf.WriteRune(unicode.ToLower(r1))
+					} else {
+						buf.WriteRune('_')
+						buf.WriteRune(unicode.ToLower(r1))
+						buf.WriteRune(r0)
+					}
+
+					break
+				}
+
+				buf.WriteRune(unicode.ToLower(r1))
+			}
+
+			if len(str) == 0 || r0 == '_' {
+				buf.WriteRune(unicode.ToLower(r0))
+				break
+			}
+
+		default:
+			if r0 == ' ' || r0 == '-' {
+				r0 = '_'
+			}
+
+			buf.WriteRune(r0)
+		}
+	}
+
+	return buf.String()
 }

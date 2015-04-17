@@ -43,24 +43,12 @@ func HtmlDecode(str string) string {
 
 // strip tags in html string
 func StripTags(src string) string {
-	//将HTML标签全转换成小写
-	re := regexp.MustCompile("\\<[\\S\\s]+?\\>")
-	src = re.ReplaceAllStringFunc(src, strings.ToLower)
-
-	//remove tag <style>
-	re = regexp.MustCompile("\\<style[\\S\\s]+?\\</style\\>")
+	//去除style,script,html tag
+	re := regexp.MustCompile(`(?s)<(?:style|script)[^<>]*>.*?</(?:style|script)>|</?[a-z][a-z0-9]*[^<>]*>|<!--.*?-->`)
 	src = re.ReplaceAllString(src, "")
-
-	//remove tag <script>
-	re = regexp.MustCompile("\\<script[\\S\\s]+?\\</script\\>")
-	src = re.ReplaceAllString(src, "")
-
-	//replace all html tag into \n
-	re = regexp.MustCompile("\\<[\\S\\s]+?\\>")
-	src = re.ReplaceAllString(src, "\n")
 
 	//trim all spaces(2+) into \n
-	re = regexp.MustCompile("\\s{2,}")
+	re = regexp.MustCompile(`\s{2,}`)
 	src = re.ReplaceAllString(src, "\n")
 
 	return strings.TrimSpace(src)

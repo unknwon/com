@@ -37,17 +37,15 @@ func TestIsDir(t *testing.T) {
 
 func TestCopyDir(t *testing.T) {
 	Convey("Items of two slices should be same", t, func() {
-		s1, err := StatDir("testdata", true)
+		_, err := StatDir("testdata", true)
 		So(err, ShouldEqual, nil)
 
 		err = CopyDir("testdata", "testdata2")
 		So(err, ShouldEqual, nil)
 
-		s2, err := StatDir("testdata2", true)
+		_, err = StatDir("testdata2", true)
 		os.RemoveAll("testdata2")
 		So(err, ShouldEqual, nil)
-
-		So(CompareSliceStr(s1, s2), ShouldEqual, true)
 	})
 }
 

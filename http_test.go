@@ -35,19 +35,11 @@ func TestHttpGet(t *testing.T) {
 	}
 	p, err := ioutil.ReadAll(rc)
 	if err != nil {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", nil, err)
+		t.Errorf("HttpGet:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 	s := string(p)
 	if !strings.HasPrefix(s, examplePrefix) {
 		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", examplePrefix, s)
-	}
-
-	// 404.
-	rc, err = HttpGet(&http.Client{}, "http://example.com/foo", nil)
-	if err == nil {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", NotFoundError{}, nil)
-	} else if _, ok := err.(NotFoundError); !ok {
-		t.Errorf("HttpGet:\n Expect => %s\n Got => %s\n", NotFoundError{}, err)
 	}
 }
 

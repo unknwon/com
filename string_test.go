@@ -16,6 +16,8 @@ package com
 
 import (
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestIsLetter(t *testing.T) {
@@ -55,6 +57,30 @@ func TestReverse(t *testing.T) {
 	if Reverse("上善若水厚德载物") != "物载德厚水若善上" {
 		t.Errorf("Reverse:\n Except => %s\n Got =>%s\n", "物载德厚水若善上", Reverse("上善若水厚德载物"))
 	}
+}
+
+func Test_ToSnakeCase(t *testing.T) {
+	cases := map[string]string{
+		"HTTPServer":         "http_server",
+		"_camelCase":         "_camel_case",
+		"NoHTTPS":            "no_https",
+		"Wi_thF":             "wi_th_f",
+		"_AnotherTES_TCaseP": "_another_tes_t_case_p",
+		"ALL":                "all",
+		"_HELLO_WORLD_":      "_hello_world_",
+		"HELLO_WORLD":        "hello_world",
+		"HELLO____WORLD":     "hello____world",
+		"TW":                 "tw",
+		"_C":                 "_c",
+
+		"  sentence case  ":                                    "__sentence_case__",
+		" Mixed-hyphen case _and SENTENCE_case and UPPER-case": "_mixed_hyphen_case__and_sentence_case_and_upper_case",
+	}
+	Convey("Convert string into snake case", t, func() {
+		for old, new := range cases {
+			So(ToSnakeCase(old), ShouldEqual, new)
+		}
+	})
 }
 
 func BenchmarkIsLetter(b *testing.B) {

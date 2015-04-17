@@ -15,6 +15,7 @@
 package com
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -43,10 +44,9 @@ func (e *RemoteError) Error() string {
 
 var UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1541.0 Safari/537.36"
 
-// HttpGet gets the specified resource. ErrNotFound is returned if the
-// server responds with status 404.
-func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser, error) {
-	req, err := http.NewRequest("GET", url, nil)
+// HttpCall makes HTTP method call.
+func HttpCall(client *http.Client, method, url string, header http.Header, body io.Reader) (io.ReadCloser, error) {
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -56,18 +56,30 @@ func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, &RemoteError{req.URL.Host, err}
+		return nil, err
 	}
 	if resp.StatusCode == 200 {
 		return resp.Body, nil
 	}
 	resp.Body.Close()
 	if resp.StatusCode == 404 { // 403 can be rate limit error.  || resp.StatusCode == 403 {
-		err = NotFoundError{"Resource not found: " + url}
+		err = fmt.Errorf("resource not found: %s", url)
 	} else {
-		err = &RemoteError{req.URL.Host, fmt.Errorf("get %s -> %d", url, resp.StatusCode)}
+		err = fmt.Errorf("%s %s -> %d", method, url, resp.StatusCode)
 	}
 	return nil, err
+}
+
+// HttpGet gets the specified resource.
+// ErrNotFound is returned if the server responds with status 404.
+func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser, error) {
+	return HttpCall(client, "GET", url, header, nil)
+}
+
+// HttpPost posts the specified resource.
+// ErrNotFound is returned if the server responds with status 404.
+func HttpPost(client *http.Client, url string, header http.Header, body []byte) (io.ReadCloser, error) {
+	return HttpCall(client, "POST", url, header, bytes.NewBuffer(body))
 }
 
 // HttpGetToFile gets the specified resource and writes to file.
@@ -110,9 +122,29 @@ func HttpGetJSON(client *http.Client, url string, v interface{}) error {
 	defer rc.Close()
 	err = json.NewDecoder(rc).Decode(v)
 	if _, ok := err.(*json.SyntaxError); ok {
-		err = NotFoundError{"JSON syntax error at " + url}
+		return fmt.Errorf("JSON syntax error at %s", url)
 	}
-	return err
+	return nil
+}
+
+// HttpPostJSON posts the specified resource with struct values,
+// and maps results to struct.
+// ErrNotFound is returned if the server responds with status 404.
+func HttpPostJSON(client *http.Client, url string, body, v interface{}) error {
+	data, err := json.Marshal(body)
+	if err != nil {
+		return err
+	}
+	rc, err := HttpPost(client, url, http.Header{"content-type": []string{"application/json"}}, data)
+	if err != nil {
+		return err
+	}
+	defer rc.Close()
+	err = json.NewDecoder(rc).Decode(v)
+	if _, ok := err.(*json.SyntaxError); ok {
+		return fmt.Errorf("JSON syntax error at %s", url)
+	}
+	return nil
 }
 
 // A RawFile describes a file that can be downloaded.

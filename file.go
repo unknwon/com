@@ -54,9 +54,9 @@ func humanateBytes(s uint64, base float64, sizes []string) string {
 }
 
 // HumaneFileSize calculates the file size and generate user-friendly string.
-func HumaneFileSize(s int64) string {
+func HumaneFileSize(s uint64) string {
 	sizes := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
-	return humanateBytes(uint64(s), 1024, sizes)
+	return humanateBytes(s, 1024, sizes)
 }
 
 // FileMTime returns file modified time and possible error.
