@@ -47,7 +47,7 @@ func TestHomeDir(t *testing.T) {
 		t.Errorf("HomeDir:\n Expect => %v\n Got => %s\n", nil, err)
 	}
 
-	os.Unsetenv("HOME")
+	os.Setenv("HOME", "")
 	_, err = HomeDir()
 	if err != nil {
 		t.Errorf("HomeDir:\n Expect => %v\n Got => %s\n", nil, err)
