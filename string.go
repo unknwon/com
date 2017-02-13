@@ -27,7 +27,7 @@ import (
 	"unicode/utf8"
 )
 
-// AESGCMEncrypt encrypts plaintext with the given key and nonce using AES in GCM mode.
+// AESGCMEncrypt encrypts plaintext with the given key using AES in GCM mode.
 func AESGCMEncrypt(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -49,7 +49,7 @@ func AESGCMEncrypt(key, plaintext []byte) ([]byte, error) {
 	return append(ciphertext, nonce...), nil
 }
 
-// AESGCMDecrypt decrypts ciphertext with the given key and nonce using AES in GCM mode.
+// AESGCMDecrypt decrypts ciphertext with the given key using AES in GCM mode.
 func AESGCMDecrypt(key, ciphertext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
