@@ -31,13 +31,13 @@ import (
 )
 
 // AESEncrypt encrypts text and given key with AES using GCM mode.
-func AESEncrypt(key, text []byte) ([]byte, error) {
+func AESEncrypt(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
-	b := base64.StdEncoding.EncodeToString(text)
+	b := base64.StdEncoding.EncodeToString(plaintext)
 	nonce := make([]byte, 12)
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func AESDecrypt(key, ciphertext []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return data, nil
 }
 
