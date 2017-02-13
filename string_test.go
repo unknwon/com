@@ -34,9 +34,9 @@ func TestAESEncrypt(t *testing.T) {
 		t.Fatal("Failed to create 12 byte nonce: " + err.Error())
 	}
 
-	plaintext := "this will be encrypted"
+	plaintext := []byte("this will be encrypted")
 
-	_, err := AESEncrypt(key, nonce, plaintext)
+	_, err = AESEncrypt(key, nonce, plaintext)
 	if err != nil {
 		t.Fatal("Failed to encrypt plaintext: " + err.Error())
 	}
