@@ -19,6 +19,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"errors"
 	r "math/rand"
 	"strconv"
 	"strings"
@@ -61,6 +62,10 @@ func AESGCMDecrypt(key, ciphertext []byte) ([]byte, error) {
 	}
 
 	size := gcm.NonceSize()
+	if len(ciphertext)-size <= 0 {
+		return nil, errors.New("Ciphertext is empty")
+	}
+
 	nonce := ciphertext[:size]
 	ciphertext = ciphertext[size:]
 
