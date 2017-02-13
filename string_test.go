@@ -18,7 +18,29 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"crypto/rand"
 )
+
+func TestAESEncrypt(t *testing.T) {
+	key := make([]byte, 16) // AES-128
+	_, err := rand.Read(key)
+	if err != nil {
+		t.Fatal("Failed to create 128 bit AES key: " + err.Error())
+	}
+
+	nonce := make([]byte, 12)
+	_, err = rand.Read(nonce)
+	if err != nil {
+		t.Fatal("Failed to create 12 byte nonce: " + err.Error())
+	}
+
+	plaintext := "this will be encrypted"
+
+	_, err := AESEncrypt(key, nonce, plaintext)
+	if err != nil {
+		t.Fatal("Failed to encrypt plaintext: " + err.Error())
+	}
+}
 
 func TestIsLetter(t *testing.T) {
 	if IsLetter('1') {
