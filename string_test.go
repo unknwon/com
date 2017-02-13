@@ -23,6 +23,8 @@ import (
 )
 
 func TestAESEncrypt(t *testing.T) {
+	t.Parallel()
+
 	key := make([]byte, 16) // AES-128
 	_, err := rand.Read(key)
 	if err != nil {
@@ -44,6 +46,8 @@ func TestAESEncrypt(t *testing.T) {
 }
 
 func TestAESDecrypt(t *testing.T) {
+	t.Parallel()
+
 	key := make([]byte, 16) // AES-128
 	_, err := rand.Read(key)
 	if err != nil {
