@@ -20,8 +20,6 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
-	"errors"
-	"io"
 	r "math/rand"
 	"strconv"
 	"strings"
@@ -30,19 +28,14 @@ import (
 	"unicode/utf8"
 )
 
-// AESEncrypt encrypts text and given key with AES using GCM mode.
-func AESEncrypt(key, plaintext []byte) ([]byte, error) {
+// AESEncrypt encrypts plaintext with the given key and nonce using AES in GCM mode.
+func AESEncrypt(key, nonce, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
 	b := base64.StdEncoding.EncodeToString(plaintext)
-	nonce := make([]byte, 12)
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, err
-	}
-
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
 		return nil, err
@@ -52,8 +45,8 @@ func AESEncrypt(key, plaintext []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
-// AESDecrypt decrypts text and given key with AES using GCM mode.
-func AESDecrypt(key, ciphertext []byte) ([]byte, error) {
+// AESDecrypt decrypts ciphertext with the given key and nonce using AES in GCM mode.
+func AESDecrypt(key, nonce, ciphertext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
