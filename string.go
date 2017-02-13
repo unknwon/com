@@ -19,7 +19,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"encoding/base64"
+	"errors"
 	r "math/rand"
 	"strconv"
 	"strings"
@@ -28,25 +28,29 @@ import (
 	"unicode/utf8"
 )
 
-// AESEncrypt encrypts plaintext with the given key and nonce using AES in GCM mode.
-func AESEncrypt(key, nonce, plaintext []byte) ([]byte, error) {
+// AESGCMEncrypt encrypts plaintext with the given key using AES in GCM mode.
+func AESGCMEncrypt(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
-	b := base64.StdEncoding.EncodeToString(plaintext)
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
 		return nil, err
 	}
 
-	ciphertext := gcm.Seal(nil, nonce, []byte(b), nil)
-	return ciphertext, nil
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := rand.Read(nonce); err != nil {
+		return nil, err
+	}
+
+	ciphertext := gcm.Seal(nil, nonce, plaintext, nil)
+	return append(nonce, ciphertext...), nil
 }
 
-// AESDecrypt decrypts ciphertext with the given key and nonce using AES in GCM mode.
-func AESDecrypt(key, nonce, ciphertext []byte) ([]byte, error) {
+// AESGCMDecrypt decrypts ciphertext with the given key using AES in GCM mode.
+func AESGCMDecrypt(key, ciphertext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -56,18 +60,21 @@ func AESDecrypt(key, nonce, ciphertext []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	size := gcm.NonceSize()
+	if len(ciphertext)-size <= 0 {
+		return nil, errors.New("Ciphertext is empty")
+	}
+
+	nonce := ciphertext[:size]
+	ciphertext = ciphertext[size:]
 
 	plainText, err := gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := base64.StdEncoding.DecodeString(string(plainText))
-	if err != nil {
-		return nil, err
-	}
-
-	return data, nil
+	return plainText, nil
 }
 
 // IsLetter returns true if the 'l' is an English letter.

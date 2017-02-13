@@ -31,15 +31,9 @@ func TestAESEncrypt(t *testing.T) {
 		t.Fatal("Failed to create 128 bit AES key: " + err.Error())
 	}
 
-	nonce := make([]byte, 12)
-	_, err = rand.Read(nonce)
-	if err != nil {
-		t.Fatal("Failed to create 12 byte nonce: " + err.Error())
-	}
-
 	plaintext := []byte("this will be encrypted")
 
-	_, err = AESEncrypt(key, nonce, plaintext)
+	_, err = AESGCMEncrypt(key, plaintext)
 	if err != nil {
 		t.Fatal("Failed to encrypt plaintext: " + err.Error())
 	}
@@ -54,20 +48,14 @@ func TestAESDecrypt(t *testing.T) {
 		t.Fatal("Failed to create 128 bit AES key: " + err.Error())
 	}
 
-	nonce := make([]byte, 12)
-	_, err = rand.Read(nonce)
-	if err != nil {
-		t.Fatal("Failed to create 12 byte nonce: " + err.Error())
-	}
-
 	plaintext := []byte("this will be encrypted")
 
-	ciphertext, err := AESEncrypt(key, nonce, plaintext)
+	ciphertext, err := AESGCMEncrypt(key, plaintext)
 	if err != nil {
 		t.Fatal("Failed to encrypt plaintext: " + err.Error())
 	}
 
-	decrypted, err := AESDecrypt(key, nonce, ciphertext)
+	decrypted, err := AESGCMDecrypt(key, ciphertext)
 	if err != nil {
 		t.Fatal("Failed to decrypt ciphertext: " + err.Error())
 	}
