@@ -52,23 +52,28 @@ func AESEncrypt(key, text []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
-// AESDecrypt decrypts text and given key with AES.
-func AESDecrypt(key, text []byte) ([]byte, error) {
+// AESDecrypt decrypts text and given key with AES using GCM mode.
+func AESDecrypt(key, ciphertext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
-	if len(text) < aes.BlockSize {
-		return nil, errors.New("ciphertext too short")
-	}
-	iv := text[:aes.BlockSize]
-	text = text[aes.BlockSize:]
-	cfb := cipher.NewCFBDecrypter(block, iv)
-	cfb.XORKeyStream(text, text)
-	data, err := base64.StdEncoding.DecodeString(string(text))
+
+	gcm, err := cipher.NewGCM(block)
 	if err != nil {
 		return nil, err
 	}
+
+	plainText, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := base64.StdEncoding.DecodeString(string(plainText))
+	if err != nil {
+		return nil, err
+	}
+	
 	return data, nil
 }
 
