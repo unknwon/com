@@ -40,8 +40,7 @@ func AESGCMEncrypt(key, plaintext []byte) ([]byte, error) {
 	}
 
 	nonce := make([]byte, gcm.NonceSize())
-	_, err = rand.Read(nonce)
-	if err != nil {
+	if _, err := rand.Read(nonce); err != nil {
 		return nil, err
 	}
 
