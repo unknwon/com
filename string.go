@@ -45,7 +45,7 @@ func AESGCMEncrypt(key, plaintext []byte) ([]byte, error) {
 	}
 
 	ciphertext := gcm.Seal(nil, nonce, plaintext, nil)
-	return append(ciphertext, nonce...), nil
+	return append(nonce, ciphertext...), nil
 }
 
 // AESGCMDecrypt decrypts ciphertext with the given key using AES in GCM mode.
@@ -60,9 +60,9 @@ func AESGCMDecrypt(key, ciphertext []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	size := len(ciphertext) - gcm.NonceSize()
-	nonce := ciphertext[size:]
-	ciphertext = ciphertext[:size]
+	size := gcm.NonceSize()
+	nonce := ciphertext[:size]
+	ciphertext = ciphertext[size:]
 
 	plainText, err := gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
