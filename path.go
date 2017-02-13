@@ -17,6 +17,7 @@ package com
 import (
 	"errors"
 	"os"
+	"os/user"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -69,7 +70,11 @@ func HomeDir() (home string, err error) {
 			home = os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
 		}
 	} else {
-		home = os.Getenv("HOME")
+		me, err := user.Current()
+		if err != nil {
+			return "", err
+		}
+		home = me.HomeDir
 	}
 
 	if len(home) == 0 {

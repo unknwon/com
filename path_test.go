@@ -46,6 +46,12 @@ func TestHomeDir(t *testing.T) {
 	if err != nil {
 		t.Errorf("HomeDir:\n Expect => %v\n Got => %s\n", nil, err)
 	}
+
+	os.Setenv("HOME", "")
+	_, err = HomeDir()
+	if err != nil {
+		t.Errorf("HomeDir:\n Expect => %v\n Got => %s\n", nil, err)
+	}
 }
 
 func BenchmarkGetGOPATHs(b *testing.B) {
