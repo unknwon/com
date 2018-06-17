@@ -17,9 +17,9 @@ package com
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
-	"crypto/rand"
 	"bytes"
+	"crypto/rand"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestAESEncrypt(t *testing.T) {
