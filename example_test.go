@@ -19,7 +19,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/Unknwon/com"
+	"github.com/unknwon/com"
 )
 
 // ------------------------------
@@ -71,7 +71,7 @@ func ExampleGetGOPATHs() {
 }
 
 func ExampleGetSrcPath() {
-	srcPath, err := com.GetSrcPath("github.com/Unknwon/com")
+	srcPath, err := com.GetSrcPath("github.com/unknwon/com")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -144,8 +144,8 @@ func ExampleExpand() {
 		"subdomain": "github.com",
 	}
 	s := "http://{domain}/{subdomain}/{0}/{1}"
-	fmt.Println(com.Expand(s, match, "Unknwon", "gowalker"))
-	// Output: http://gowalker.org/github.com/Unknwon/gowalker
+	fmt.Println(com.Expand(s, match, "unknwon", "gowalker"))
+	// Output: http://gowalker.org/github.com/unknwon/gowalker
 }
 
 // ------------- END ------------

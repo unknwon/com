@@ -15,10 +15,10 @@
 package com
 
 import (
-	"testing"
-
 	"bytes"
 	"crypto/rand"
+	"testing"
+
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -89,8 +89,8 @@ func TestExpand(t *testing.T) {
 		"subdomain": "github.com",
 	}
 	s := "http://{domain}/{subdomain}/{0}/{1}"
-	sR := "http://gowalker.org/github.com/Unknwon/gowalker"
-	if Expand(s, match, "Unknwon", "gowalker") != sR {
+	sR := "http://gowalker.org/github.com/unknwon/gowalker"
+	if Expand(s, match, "unknwon", "gowalker") != sR {
 		t.Errorf("Expand:\n Expect => %s\n Got => %s\n", sR, s)
 	}
 }
@@ -118,7 +118,7 @@ func Test_ToSnakeCase(t *testing.T) {
 		"TW":                 "tw",
 		"_C":                 "_c",
 
-		"  sentence case  ":                                    "__sentence_case__",
+		"  sentence case  ": "__sentence_case__",
 		" Mixed-hyphen case _and SENTENCE_case and UPPER-case": "_mixed_hyphen_case__and_sentence_case_and_upper_case",
 	}
 	Convey("Convert string into snake case", t, func() {
