@@ -5,7 +5,7 @@ Common Functions
 
 This is an open source project for commonly used functions for the Go programming language.
 
-This package need >= **go 1.2**
+This package need >= **go 1.3**
 
 Code Convention: based on [Go Code Convention](https://github.com/unknwon/go-code-convention).
 
